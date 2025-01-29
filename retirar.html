@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirar Fundos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #0044cc;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 480px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #0044cc;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            text-align: left;
+            margin-bottom: 8px;
+            color: #333;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 8px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #fafafa;
+            color: #333;
+        }
+
+        input:focus {
+            border-color: #0044cc;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #0044cc;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #0033a0;
+        }
+
+        .feedback {
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .dicas {
+            background-color: #e1f4ff;
+            border-left: 5px solid #0044cc;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+            border-radius: 8px;
+        }
+
+        .dicas h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .dicas p {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .form-wrapper {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            input {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .dicas {
+                font-size: 12px;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-wrapper {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            input {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .dicas {
+                font-size: 12px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <h2>Retirar Fundos</h2>
+            <form id="form-retirar">
+                <label for="valor">Valor a ser retirado (mínimo 1.500 AKZ, máximo 2.000.000 AKZ)</label>
+                <input type="number" id="valor" name="valor" placeholder="Valor" required>
+
+                <label for="iban">IBAN</label>
+                <input type="text" id="iban" name="iban" placeholder="Número da Conta (IBAN)" required>
+
+                <label for="banco">Nome do Banco</label>
+                <input type="text" id="banco" name="banco" placeholder="Nome do Banco" required>
+
+                <label for="beneficiario">Nome do Beneficiário</label>
+                <input type="text" id="beneficiario" name="beneficiario" placeholder="Nome do Beneficiário" required>
+
+                <button type="submit">Retirar</button>
+            </form>
+            <div id="feedback-retirada" class="feedback"></div>
+        </div>
+
+        <div class="dicas">
+            <h3>Dicas:</h3>
+            <p>1. A taxa de saque é de 11% sobre o valor total.</p>
+            <p>2. O valor mínimo de saque é 1.500 AKZ e o máximo é 2.000.000 AKZ.</p>
+            <p>3. Você pode realizar saques todos os dias.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formRetirar = document.getElementById('form-retirar');
+            const feedbackRetirada = document.getElementById('feedback-retirada');
+            
+            // Recuperar usuário logado do localStorage
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+            // Verificar se o usuário está logado
+            if (!usuarioLogado) {
+                window.location.href = 'index.html'; // Se não estiver logado, redireciona para login
+            }
+
+            // Função para processar a retirada
+            formRetirar.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const valor = parseFloat(document.getElementById('valor').value);
+                const iban = document.getElementById('iban').value;
+                const banco = document.getElementById('banco').value;
+                const beneficiario = document.getElementById('beneficiario').value;
+
+                // Verificar se o valor está dentro do limite de saque
+                if (valor < 1500 || valor > 2000000) {
+                    feedbackRetirada.textContent = 'O valor de saque deve ser entre 1.500 AKZ e 2.000.000 AKZ.';
+                    feedbackRetirada.className = 'error';
+                    return;
+                }
+
+                // Verificar se o saldo é suficiente para realizar o saque
+                if (valor <= 0 || valor > usuarioLogado.saldo) {
+                    feedbackRetirada.textContent = 'Valor inválido ou saldo insuficiente.';
+                    feedbackRetirada.className = 'error';
+                    return;
+                }
+
+                // Calcular a taxa de saque (11%)
+                const taxa = valor * 0.11;
+                const valorLiquido = valor - taxa;
+
+                // Deduzir o saldo do usuário
+                const saldoRestante = usuarioLogado.saldo - valor;
+
+                // Dados da retirada
+                const retirada = {
+                    valor,
+                    taxa,
+                    valorLiquido,
+                    iban,
+                    banco,
+                    beneficiario,
+                    data: new Date().toISOString(),
+                    usuarioId: usuarioLogado.id
+                };
+
+                // Atualizar o saldo do usuário no banco de dados
+                fetch(`https://meuappi.onrender.com/usuarios/${usuarioLogado.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ saldo: saldoRestante })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao atualizar o saldo.');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    // Registrar a retirada no banco de dados
+                    return fetch('https://meuappi.onrender.com/retiradas', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(retirada)
+                    });
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao registrar a retirada.');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    // Feedback de sucesso
+                    feedbackRetirada.textContent = `Retirada realizada com sucesso! Você retirou ${valor} AKZ, a taxa foi de ${taxa} AKZ e você recebeu ${valorLiquido} AKZ.`;
+                    feedbackRetirada.className = 'success';
+
+                    // Atualizar o saldo do usuário no localStorage
+                    usuarioLogado.saldo = saldoRestante;
+                    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+
+                    // Opcional: Limpar o formulário
+                    formRetirar.reset();
+                })
+                .catch(error => {
+                    feedbackRetirada.textContent = error.message;
+                    feedbackRetirada.className = 'error';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

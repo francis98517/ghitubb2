@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMD - Depósito</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 26px;
+            color: #0066cc; /* Azul profissional */
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+
+        input:focus {
+            border-color: #0066cc;
+            outline: none;
+            background-color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background-color: #0066cc;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        .feedback {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback.error {
+            color: #e74c3c;
+        }
+
+        .feedback.success {
+            color: #2ecc71;
+        }
+
+        .deposito-form {
+            display: none;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            input, button {
+                font-size: 14px;
+                padding: 12px;
+            }
+
+            .feedback {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            input, button {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>ADMS</h2>
+
+        <!-- Formulário para digitar a senha -->
+        <div id="form-senha">
+            <label for="senha-deposito">Senha de BMD (Só para adms):</label>
+            <input type="password" id="senha-deposito" placeholder="Digite a senha" required>
+            <button id="btn-verificar-senha">Verificar Senha</button>
+            <div id="feedback-senha" class="feedback"></div>
+        </div>
+
+        <!-- Formulário de Depósito -->
+        <div id="form-deposito" class="deposito-form">
+            <label for="valor-deposito">Valor do Depósito:</label>
+            <input type="number" id="valor-deposito" placeholder="Digite o valor" required>
+            <button id="btn-depositar">Depositar</button>
+            <div id="feedback-deposito" class="feedback"></div>
+            <div id="feedback-saldo" class="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formSenha = document.getElementById('form-senha');
+            const formDeposito = document.getElementById('form-deposito');
+            const feedbackSenha = document.getElementById('feedback-senha');
+            const feedbackDeposito = document.getElementById('feedback-deposito');
+            const feedbackSaldo = document.getElementById('feedback-saldo');
+            const btnVerificarSenha = document.getElementById('btn-verificar-senha');
+            const btnDepositar = document.getElementById('btn-depositar');
+
+            const senhaDeDeposito = '929250135';
+
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+            if (!usuarioLogado) {
+                window.location.href = 'index.html';
+            }
+
+            btnVerificarSenha.addEventListener('click', function () {
+                const senhaInput = document.getElementById('senha-deposito').value;
+
+                if (senhaInput === senhaDeDeposito) {
+                    formSenha.style.display = 'none';
+                    formDeposito.style.display = 'block';
+                    feedbackSenha.textContent = '';
+                } else {
+                    feedbackSenha.textContent = 'Senha incorreta!';
+                    feedbackSenha.className = 'error';
+                }
+            });
+
+            btnDepositar.addEventListener('click', function () {
+                const valorDeposito = parseFloat(document.getElementById('valor-deposito').value);
+
+                if (isNaN(valorDeposito) || valorDeposito <= 0) {
+                    feedbackDeposito.textContent = 'Por favor, insira um valor válido para o depósito.';
+                    feedbackDeposito.className = 'error';
+                    return;
+                }
+
+                const novoSaldo = usuarioLogado.saldo + valorDeposito;
+
+                // Atualizar saldo no backend
+                fetch(`https://meuappi.onrender.com/usuarios/${usuarioLogado.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ saldo: novoSaldo })
+                })
+                .then(response => response.json())
+                .then(() => {
+                    usuarioLogado.saldo = novoSaldo;
+                    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+
+                    feedbackDeposito.textContent = 'Depósito realizado com sucesso!';
+                    feedbackDeposito.className = 'success';
+
+                    feedbackSaldo.textContent = `Saldo atual: AKZ ${usuarioLogado.saldo}`;
+                    feedbackSaldo.className = 'success';
+
+                    const transacao = {
+                        tipo: 'Depósito',
+                        valor: valorDeposito,
+                        data: new Date().toISOString(),
+                        usuarioId: usuarioLogado.id
+                    };
+
+                    fetch('https://meuappi.onrender.com/depositos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(transacao)
+                    })
+                    .catch(error => console.error('Erro ao registrar transação:', error));
+                })
+                .catch(() => {
+                    feedbackDeposito.textContent = 'Erro ao realizar depósito.';
+                    feedbackDeposito.className = 'error';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

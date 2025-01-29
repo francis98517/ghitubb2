@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depósito</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0066cc;
+            margin-bottom: 24px;
+            font-size: 26px;
+        }
+
+        .informacoes {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .informacoes div {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .informacoes div span {
+            font-weight: bold;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        .dicas {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .dicas ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .dicas ul li {
+            margin-bottom: 10px;
+        }
+
+        .mensagem {
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .mensagem.sucesso {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .mensagem.erro {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            button {
+                padding: 14px;
+                font-size: 14px;
+            }
+
+            .informacoes div {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 20px;
+            }
+
+            button {
+                padding: 16px;
+                font-size: 14px;
+            }
+
+            .informacoes div {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Realizar Depósito</h2>
+        <div class="informacoes">
+            <div>
+                <span>Nome:</span>
+                <p id="nome-administrador">Jocob Tomás</p>
+                <button class="copiar-nome" id="copiar-nome">Copiar Nome</button>
+            </div>
+
+            <div>
+                <span>IBAN do Administrador:</span>
+                <p id="iban">000600002035568230109</p>
+                <button class="copiar-iban" id="copiar-iban">Copiar IBAN</button>
+            </div>
+            <div>
+                <span>Nome do Banco:</span>
+                <p id="banco">Banco BFA</p>
+            </div>
+
+            <div>
+                <span>Valor a Ser Depositado:</span>
+                <input type="number" id="valor-input" placeholder="Digite o valor" min="1" step="0.01" />
+            </div>
+
+            <div id="mensagem-feedback" class="mensagem"></div>
+
+            <button class="botao-depositar" id="depositar" onclick="redirecionarTelegram()">Depositar</button>
+        </div>
+
+        <div class="dicas">
+            <h3>Dicas para um Depósito Seguro:</h3>
+            <ul>
+                <li><strong>Podes:</strong> Podes fazer depósito em qualquer banco, será processado imediatamente.</li>
+                <li><strong>Verifique o IBAN:</strong> Certifique-se de que o IBAN está correto antes de realizar o depósito.</li>
+                <li><strong>Valor Exato:</strong> Realize o depósito com o valor exato que foi informado.</li>
+                <li><strong>Depósito Confirmado:</strong> Após o depósito, entre em contato com o administrador para confirmar a transação.</li>
+                <li><strong>Evite Erros:</strong> Se tiver dúvidas, entre em contato com o suporte através do nosso canal no Telegram.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('copiar-iban').addEventListener('click', function() {
+            const iban = document.getElementById('iban').textContent;
+            navigator.clipboard.writeText(iban)
+                .then(() => {
+                    exibirMensagem('IBAN copiado com sucesso!', 'sucesso');
+                })
+                .catch(err => {
+                    exibirMensagem('Erro ao copiar IBAN: ' + err, 'erro');
+                });
+        });
+
+        document.getElementById('copiar-nome').addEventListener('click', function() {
+            const nome = document.getElementById('nome-administrador').textContent;
+            navigator.clipboard.writeText(nome)
+                .then(() => {
+                    exibirMensagem('Nome do administrador copiado com sucesso!', 'sucesso');
+                })
+                .catch(err => {
+                    exibirMensagem('Erro ao copiar o nome: ' + err, 'erro');
+                });
+        });
+
+        function exibirMensagem(mensagem, tipo) {
+            const mensagemDiv = document.getElementById('mensagem-feedback');
+            mensagemDiv.textContent = mensagem;
+            mensagemDiv.className = 'mensagem ' + tipo;
+        }
+
+        function redirecionarTelegram() {
+            const valor = document.getElementById('valor-input').value;
+
+            if (!valor || valor <= 0) {
+                exibirMensagem('Por favor, insira um valor válido para o depósito.', 'erro');
+                return;
+            }
+
+            const telegramLink = `https://t.me/Baizunyy?text=Depósito%20de%20AKZ${valor}%20solicitado.`;
+            window.location.href = telegramLink;
+        }
+    </script>
+</body>
+</html>

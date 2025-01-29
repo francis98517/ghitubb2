@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Investimentos</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh; /* Ocupa toda a altura da tela */
+            margin: 0;
+            padding: 0 15px; /* Adiciona um pequeno padding para as laterais */
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            height: 100%; /* Ocupa toda a altura disponível */
+            overflow-y: auto;
+        }
+
+        th, td {
+            padding: 12px 8px; /* Maior espaçamento nas células */
+            text-align: left;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .status-pendente {
+            color: green;
+        }
+
+        .status-expirado {
+            color: red;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .feedback {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 20px;
+            }
+
+            table, th, td {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            th, td {
+                word-wrap: break-word;
+                white-space: normal;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 18px;
+            }
+
+            th, td {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            td {
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Histórico de Investimentos</h2>
+
+        <!-- Tabela de Produtos Comprados -->
+        <table id="tabela-produtos">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Data de Compra</th>
+                    <th>Data de Expiração</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Produtos serão listados aqui -->
+            </tbody>
+        </table>
+
+        <!-- Feedback -->
+        <div id="feedback-produtos" class="feedback"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabelaProdutos = document.getElementById('tabela-produtos').getElementsByTagName('tbody')[0];
+            const feedbackProdutos = document.getElementById('feedback-produtos');
+
+            // Recuperar usuário logado do localStorage
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+            // Verificar se o usuário está logado
+            if (!usuarioLogado) {
+                window.location.href = 'index.html'; // Se não estiver logado, redireciona para login
+            }
+
+            // Buscar o histórico de compras do usuário
+            fetch(`https://meuappi.onrender.com/produtos?usuarioId=${usuarioLogado.id}`)
+                .then(response => response.json())
+                .then(compras => {
+                    if (compras.length === 0) {
+                        feedbackProdutos.textContent = 'Você não tem nenhum produto comprado no momento.';
+                        feedbackProdutos.className = 'error';
+                    } else {
+                        // Exibir as compras na tabela
+                        compras.forEach(compra => {
+                            // Calcular a data de expiração (25 dias após a data de compra)
+                            const dataCompra = new Date(compra.dataCompra);
+                            const dataExpiracao = new Date(dataCompra);
+                            dataExpiracao.setDate(dataExpiracao.getDate() + 25); // Adiciona 25 dias
+
+                            // Verificar se o produto está expirado ou pendente
+                            const hoje = new Date();
+                            let status = 'Pendente';
+                            let statusClass = 'status-pendente';
+
+                            if (dataExpiracao <= hoje) {
+                                status = 'Expirado';
+                                statusClass = 'status-expirado';
+                            }
+
+                            // Buscar o nome do produto a partir do ID (ou de qualquer outra informação que seja necessária)
+                            const nomeProduto = compra.nomeProduto; // Certifique-se de que o nomeProduto esteja correto na resposta da API.
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${nomeProduto}</td>
+                                <td>${dataCompra.toLocaleDateString()}</td>
+                                <td>${dataExpiracao.toLocaleDateString()}</td>
+                                <td class="${statusClass}">${status}</td>
+                            `;
+                            tabelaProdutos.appendChild(tr);
+                        });
+                    }
+                })
+                .catch(error => {
+                    feedbackProdutos.textContent = 'Erro ao carregar o histórico de compras.';
+                    feedbackProdutos.className = 'error';
+                });
+        });
+    </script>
+</body>
+</html>

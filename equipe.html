@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Equipe - Ghitubb2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 26px;
+            color: #0066cc;
+        }
+
+        .bonus {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 24px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .bonus p {
+            font-size: 18px;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .codigo-convite,
+        .urls {
+            margin-bottom: 24px;
+        }
+
+        .botao-copiar {
+            width: 100%;
+            padding: 14px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .botao-copiar:hover {
+            background-color: #005bb5;
+        }
+
+        .convidados {
+            margin-top: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .convidado {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .feedback {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback.error {
+            color: #e74c3c;
+        }
+
+        .feedback.success {
+            color: #2ecc71;
+        }
+
+        .ativo {
+            color: red;
+            font-weight: bold;
+        }
+
+        .inativo {
+            color: grey;
+            font-weight: bold;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            .botao-copiar {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Minha Equipe</h2>
+
+        <!-- Seção de Bônus -->
+        <div class="bonus">
+            <p>Convide seus amigos! Você receberá bônus de 23% quando eles realizarem depósitos. (Será feito manualmente)</p>
+        </div>
+
+        <!-- URL para copiar -->
+        <div class="urls">
+            <p><strong>Compartilhe a URL com seus amigos:</strong> <span id="url">https://ghitubb2.onrender.com</span></p>
+            <button class="botao-copiar" id="copiar-url">Copiar URL</button>
+        </div>
+
+        <!-- Código de Convite -->
+        <div class="codigo-convite">
+            <p><strong>Código de Convite:</strong> <span id="codigo-convite"></span></p>
+            <button class="botao-copiar" id="copiar-codigo">Copiar Código</button>
+        </div>
+
+        <!-- Lista de Convidados -->
+        <div class="convidados">
+            <h3>Convidados:</h3>
+            <div id="lista-convidados"></div>
+        </div>
+
+        <!-- Feedback -->
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+            const feedback = document.getElementById('feedback');
+            const listaConvidados = document.getElementById('lista-convidados');
+            const codigoConviteElemento = document.getElementById('codigo-convite');
+            const copiarCodigoBotao = document.getElementById('copiar-codigo');
+
+            if (!usuarioLogado) {
+                feedback.textContent = 'Por favor, faça login para acessar sua equipe.';
+                feedback.classList.add('error');
+                return;
+            }
+
+            // Exibe o código de convite do usuário logado
+            codigoConviteElemento.textContent = usuarioLogado.codigo_convite;
+
+            // Função para copiar o código de convite para a área de transferência
+            copiarCodigoBotao.addEventListener('click', function () {
+                navigator.clipboard.writeText(usuarioLogado.codigo_convite)
+                    .then(() => {
+                        feedback.textContent = 'Código copiado!';
+                        feedback.classList.remove('error');
+                        feedback.classList.add('success');
+                    })
+                    .catch(() => {
+                        feedback.textContent = 'Falha ao copiar código!';
+                        feedback.classList.add('error');
+                    });
+            });
+
+            // Buscar os usuários que se cadastraram com o código de convite do usuário logado
+            fetch(`https://meuappi.onrender.com/usuarios?codigo_convite_referido=${usuarioLogado.codigo_convite}`)
+                .then(response => response.json())
+                .then(convidados => {
+                    if (convidados.length === 0) {
+                        listaConvidados.innerHTML = '<p>Você ainda não tem convidados.</p>';
+                    } else {
+                        convidados.forEach(convidado => {
+                            const convidadoDiv = document.createElement('div');
+                            convidadoDiv.classList.add('convidado');
+                            convidadoDiv.innerHTML = `
+                                <p><strong>ID:</strong> ${convidado.id} - <strong>Nome:</strong> ${convidado.nome}</p>
+                                <p class="ativo">${convidado.ativo ? 'Ativo' : 'Inativo'}</p>
+                            `;
+                            listaConvidados.appendChild(convidadoDiv);
+
+                            // Verifica se o convidado tem uma compra
+                            fetch(`https://meuappi.onrender.com/produtos?usuario_id=${convidado.id}`)
+                                .then(response => response.json())
+                                .then(compras => {
+                                    if (compras.length > 0) {
+                                        // O convidado fez uma compra, então é possível aplicar o bônus manualmente
+                                        // Sem realizar mais nenhuma ação aqui para aplicar bônus automaticamente
+                                    } else {
+                                        // Caso o convidado não tenha feito compras
+                                        feedback.textContent = 'Usuário não tem compras ainda.';
+                                        feedback.classList.add('error');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Erro ao consultar compras do convidado:', error);
+                                    feedback.textContent = 'Erro ao consultar compras do convidado.';
+                                    feedback.classList.add('error');
+                                });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar os convidados:', error);
+                    feedback.textContent = 'Erro ao carregar os convidados.';
+                    feedback.classList.add('error');
+                });
+
+            // Função para copiar URL
+            document.getElementById('copiar-url').addEventListener('click', function() {
+                const url = document.getElementById('url').textContent;
+                navigator.clipboard.writeText(url)
+                    .then(() => {
+                        feedback.textContent = 'URL copiado!';
+                        feedback.classList.remove('error');
+                        feedback.classList.add('success');
+                    })
+                    .catch(() => {
+                        feedback.textContent = 'Falha ao copiar URL!';
+                        feedback.classList.add('error');
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

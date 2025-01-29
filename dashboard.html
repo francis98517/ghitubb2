@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Usuário</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            height: auto;
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0066cc;
+            margin-bottom: 24px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6600;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card h3 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .card .balance {
+            font-size: 24px;
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        .card .balance span {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            flex-grow: 1;
+        }
+
+        .actions a {
+            padding: 14px;
+            background-color: #ff6600;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        .actions a:hover {
+            background-color: #e65c00;
+        }
+
+        .actions a.logout {
+            background-color: #f44336;
+        }
+
+        .actions a.logout:hover {
+            background-color: #e53935;
+        }
+
+        /* Modo Profissional */
+        .professional body {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        .professional .container {
+            background-color: #34495e;
+        }
+
+        .professional .card {
+            background-color: #2c3e50;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .professional .card .balance {
+            color: #1abc9c;
+        }
+
+        .professional .actions a {
+            background-color: #2980b9;
+        }
+
+        .professional .actions a:hover {
+            background-color: #3498db;
+        }
+
+        .mode-toggle {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #toggleMode {
+            padding: 10px 20px;
+            background-color: #ff6600;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #toggleMode:hover {
+            background-color: #e65c00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h2 id="welcome-message">Bem-vindo, </h2>
+            <button id="logout-btn" class="logout">Sair</button>
+        </div>
+
+        <!-- Saldo como cartão -->
+        <div class="card">
+            <h3>Seu Saldo</h3>
+            <div class="balance" id="saldo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1024px-Bitcoin.svg.png" alt="Carteira" width="30" style="vertical-align: middle; margin-right: 10px;">
+                AKZ 0.00
+                <span id="saldo-info"></span>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="actions">
+            <a href="#" id="retirar">Retirar</a>
+            <a href="#" id="BAMD">BAMD</a>
+            <a href="#" id="informacoes">Informações</a>
+            <a href="#" id="servicos">Serviços</a>
+            <a href="#" id="produtos">Produtos</a>
+            <a href="#" id="depositar">Depósitos</a>
+            <a href="#" id="registros">Registros</a>
+            <a href="#" id="equipe">Equipe</a>
+            <a href="#" id="my">My</a>
+            <a href="#" id="tabela">Tabela</a>
+            <a href="#" id="tarefas">Termos de uso</a>
+        </div>
+
+        <!-- Alternar Modo -->
+        <div class="mode-toggle">
+            <button id="toggleMode">Modo Profissional</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const saldoElement = document.getElementById('saldo');
+            const saldoInfo = document.getElementById('saldo-info');
+            const logoutBtn = document.getElementById('logout-btn');
+            const welcomeMessage = document.getElementById('welcome-message');
+            const toggleModeBtn = document.getElementById('toggleMode');
+            const isProfessional = localStorage.getItem('modoProfissional') === 'true';
+
+            // Aplicar o modo ao carregar a página
+            document.body.classList.toggle("professional", isProfessional);
+            toggleModeBtn.textContent = isProfessional ? 'Modo Normal' : 'Modo Profissional';
+
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')); // Dados do usuário que logou
+
+            if (usuarioLogado) {
+                saldoElement.textContent = `AKZ ${usuarioLogado.saldo.toFixed(2)}`;
+                saldoInfo.textContent = ` | Código de Convite: ${usuarioLogado.codigo_convite}`;
+                welcomeMessage.textContent = `Olá, ${usuarioLogado.nome}! ID: ${usuarioLogado.id}`;
+            } else {
+                window.location.href = 'index.html';
+            }
+
+            logoutBtn.addEventListener('click', function () {
+                localStorage.removeItem('usuarioLogado');
+                window.location.href = 'index.html';
+            });
+
+            toggleModeBtn.addEventListener('click', function () {
+                const newMode = !isProfessional;
+                localStorage.setItem('modoProfissional', newMode);
+                document.body.classList.toggle("professional", newMode);
+                toggleModeBtn.textContent = newMode ? 'Modo Normal' : 'Modo Profissional';
+            });
+
+            // Ações (Redirecionamento de links)
+            document.getElementById('retirar').addEventListener('click', function () {
+                window.location.href = 'retirar.html';
+            });
+
+            document.getElementById('BAMD').addEventListener('click', function () {
+                window.location.href = 'bamd.html';
+            });
+
+            document.getElementById('informacoes').addEventListener('click', function () {
+                window.location.href = 'informacoes.html';
+            });
+
+            document.getElementById('servicos').addEventListener('click', function () {
+                window.location.href = 'servicos.html';
+            });
+
+            document.getElementById('produtos').addEventListener('click', function () {
+                window.location.href = 'produtos.html';
+            });
+
+            document.getElementById('depositar').addEventListener('click', function () {
+                window.location.href = 'depositar.html';
+            });
+
+            document.getElementById('registros').addEventListener('click', function () {
+                window.location.href = 'registros.html';
+            });
+
+            document.getElementById('equipe').addEventListener('click', function () {
+                window.location.href = 'equipe.html';
+            });
+
+            document.getElementById('my').addEventListener('click', function () {
+                window.location.href = 'my.html';
+            });
+
+            document.getElementById('tarefas').addEventListener('click', function () {
+                window.location.href = 'tarefas.html';
+            });
+
+            document.getElementById('tabela').addEventListener('click', function () {
+                window.location.href = 'tabela.html';
+            });
+        });
+    </script>
+</body>
+</html>

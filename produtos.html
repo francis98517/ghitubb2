@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 20px auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2C3E50;
+        }
+
+        .produtos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .produto {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            max-width: 250px;
+            text-align: center;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .produto h3 {
+            margin: 10px 0;
+        }
+
+        .produto p {
+            font-size: 14px;
+        }
+
+        .botao-comprar {
+            background-color: #3498DB;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .botao-comprar:hover {
+            background-color: #2980B9;
+        }
+
+        .feedback {
+            display: none; /* Começa escondido */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            font-size: 16px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .contador-regressivo {
+            font-size: 12px;
+            color: red;
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+        }
+
+        .indisponivel {
+            background-color: #f0f0f0;
+            color: #ccc;
+            pointer-events: none;
+        }
+
+        /* Media Queries */
+        @media (max-width: 600px) {
+            .produto {
+                width: 100%;
+            }
+
+            .botao-comprar {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .produto h3 {
+                font-size: 16px;
+            }
+
+            .produto p {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .produto p {
+                font-size: 10px;
+            }
+
+            .botao-comprar {
+                font-size: 10px;
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Produtos Disponíveis</h2>
+        <div class="produtos">
+            <!-- Produtos -->
+            <div class="produto" id="produto-mendigo">
+                <h3>Produto Mendigo</h3>
+                <p>Invista 1.000 AKZ e faça 120 AKZ diariamente em um valor de 3.000 AKZ em 25 dias. Com um rendimento de 12% ao dia, seu investimento de 1.000 AKZ renderá 120 AKZ por dia, totalizando 3.000 AKZ de lucro após 25 dias.</p>
+                <button class="botao-comprar" data-produto="mendigo">Comprar</button>
+                <div class="contador-regressivo" id="contador-mendigo"></div>
+            </div>
+            <div class="produto" id="produto-pobre">
+                <h3>Produto Pobre</h3>
+                <p>Invista 2.500 AKZ e faça 300 AKZ diariamente em um valor de 10.000 AKZ em 25 dias. Com um rendimento de 12% ao dia, seu investimento de 2.500 AKZ renderá 300 AKZ por dia, totalizando 7.500 AKZ de lucro após 25 dias.</p>
+                <button class="botao-comprar" data-produto="pobre">Comprar</button>
+                <div class="contador-regressivo" id="contador-pobre"></div>
+            </div>
+            <div class="produto" id="produto-rico">
+                <h3>Produto Rico</h3>
+                <p>Invista 12.000 AKZ e faça 1.440 AKZ diariamente, totalizando 48.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 12.000 AKZ gerará 1.440 AKZ por dia, resultando em 36.000 AKZ de lucro ao final de 25 dias.</p>
+                <button class="botao-comprar" data-produto="rico">Comprar</button>
+                <div class="contador-regressivo" id="contador-rico"></div>
+            </div>
+            <div class="produto" id="produto-mais-rico">
+                <h3>Produto Mais Rico</h3>
+                <p>
+                    Invista 23.000 AKZ e faça 2.760 AKZ diariamente, totalizando 92.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 23.000 AKZ gerará 2.760 AKZ por dia, resultando em 69.000 AKZ de lucro ao final de 25 dias.
+                </p>
+                <button class="botao-comprar" data-produto="mais-rico">Comprar</button>
+                <div class="contador-regressivo" id="contador-mais-rico"></div>
+            </div>
+            <div class="produto" id="produto-boss">
+                <h3>Produto Boss</h3>
+                <p>Invista 54.000 AKZ e faça 6.480 AKZ diariamente, totalizando 216.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 54.000 AKZ gerará 6.480 AKZ por dia, resultando em 162.000 AK lucro ao final de 25 dias.</p>
+                <button class="botao-comprar" data-produto="boss">Comprar</button>
+                <div class="contador-regressivo" id="contador-boss"></div>
+            </div>
+            <div class="produto" id="produto-mais-boss">
+                <h3>Produto Mais Boss</h3>
+                <p>
+                    Invista 132.000 AKZ e faça 15.840 AKZ diariamente, totalizando 528.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 132.000 AKZ gerará 15.840 AKZ por dia, resultando em 396.000 AKZ de lucro ao final de 25 dias.
+                </p>
+                <button class="botao-comprar" data-produto="mais-boss">Comprar</button>
+                <div class="contador-regressivo" id="contador-mais-boss"></div>
+            </div>
+            <div class="produto" id="produto-premium">
+                <h3>Produto Premium</h3>
+                <p>Invista 223.000 AKZ e faça 26.760 AKZ diariamente, totalizando 892.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 223.000 AKZ gerará 26.760 AKZ por dia, resultando em 669.000 AK lucro ao final de 25 dias.</p>
+                <button class="botao-comprar" data-produto="premium">Comprar</button>
+                <div class="contador-regressivo" id="contador-premium"></div>
+            </div>
+        </div>
+
+        <!-- Feedback da compra -->
+        <div id="feedback-compra" class="feedback"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const botaoComprar = document.querySelectorAll('.botao-comprar');
+            const feedbackCompra = document.getElementById('feedback-compra');
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+            if (!usuarioLogado) {
+                feedbackCompra.textContent = 'Por favor, faça login para comprar.';
+                feedbackCompra.classList.add('error');
+                mostrarFeedback();
+                return;
+            }
+
+            // Consultando o backend para as compras do usuário
+            fetch(`https://meuappi.onrender.com/produtos?usuarioId=${usuarioLogado.id}`)
+                .then(response => response.json())
+                .then(produtosComprados => {
+                    produtosComprados.forEach(produto => {
+                        const produtoId = produto.produto;
+                        const produtoElemento = document.getElementById(`produto-${produtoId}`);
+                        if (produtoElemento) {
+                            produtoElemento.classList.add('indisponivel');
+                            const botao = produtoElemento.querySelector('.botao-comprar');
+                            if (botao) botao.disabled = true;
+                            iniciarContagemRegressiva(produtoId, produto.dataCompra);
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar compras do usuário:', error);
+                });
+
+            botaoComprar.forEach(botao => {
+                botao.addEventListener('click', function () {
+                    const produtoId = this.dataset.produto;
+                    const valorProduto = obterValorProduto(produtoId);
+
+                    if (usuarioLogado.saldo < valorProduto) {
+                        feedbackCompra.textContent = 'Saldo insuficiente!';
+                        feedbackCompra.classList.add('error');
+                        mostrarFeedback();
+                        return;
+                    }
+
+                    // Deduz o valor do saldo do usuário
+                    const novoSaldo = usuarioLogado.saldo - valorProduto;
+
+                    // Atualiza o saldo no banco de dados (backend)
+                    fetch(`https://meuappi.onrender.com/usuarios/${usuarioLogado.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            saldo: novoSaldo
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Atualiza o saldo no localStorage
+                        usuarioLogado.saldo = novoSaldo;
+                        localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+
+                        feedbackCompra.textContent = 'Compra realizada com sucesso!';
+                        feedbackCompra.classList.remove('error');
+                        feedbackCompra.classList.add('success');
+                        mostrarFeedback();
+
+                        // Registrar a compra no banco de dados (endpoint /produtos)
+                        const produtoComprado = {
+                            usuarioId: usuarioLogado.id,
+                            produto: produtoId,
+                            valor: valorProduto,
+                            dataCompra: new Date().toISOString()
+                        };
+
+                        fetch('https://meuappi.onrender.com/produtos', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(produtoComprado)
+                        })
+                        .then(response => response.json())
+                        .then(produto => {
+                            console.log('Compra registrada com sucesso:', produto);
+                        })
+                        .catch(error => {
+                            console.error('Erro ao registrar a compra:', error);
+                        });
+
+                        // Desabilitar o botão e adicionar classe 'indisponivel'
+                        const produtoElemento = document.getElementById(`produto-${produtoId}`);
+                        produtoElemento.classList.add('indisponivel');
+                        this.disabled = true;
+
+                        // Iniciar a contagem regressiva
+                        iniciarContagemRegressiva(produtoId, produtoComprado.dataCompra);
+                    })
+                    .catch(error => {
+                        feedbackCompra.textContent = 'Erro ao atualizar o saldo!';
+                        feedbackCompra.classList.add('error');
+                        mostrarFeedback();
+                        console.error('Erro ao atualizar o saldo:', error);
+                    });
+                });
+            });
+
+            function obterValorProduto(produtoId) {
+                switch (produtoId) {
+                    case 'mendigo': return 1000;
+                    case 'pobre': return 2500;
+                    case 'rico': return 12000;
+                    case 'mais-rico': return 23000;
+                    case 'boss': return 54000;
+                    case 'mais-boss': return 132000;
+                    case 'premium': return 223000;
+                    default: return 0;
+                }
+            }
+
+            function mostrarFeedback() {
+                feedbackCompra.style.display = 'block';
+                setTimeout(() => {
+                    feedbackCompra.style.display = 'none';  // Desaparece após 5 segundos
+                }, 5000); // Tempo de desaparecimento
+            }
+
+            function iniciarContagemRegressiva(produtoId, dataCompra) {
+                const contador = document.getElementById(`contador-${produtoId}`);
+                const dataCompraDate = new Date(dataCompra); // Data de compra do produto
+                const dataExpiracao = new Date(dataCompraDate);
+                dataExpiracao.setDate(dataCompraDate.getDate() + 25); // Expiração em 25 dias
+
+                const intervalo = setInterval(function () {
+                    const agora = new Date();
+                    const tempoRestante = dataExpiracao - agora;
+                    if (tempoRestante <= 0) {
+                        clearInterval(intervalo);
+                        contador.textContent = 'Compra expirada!';
+                    } else {
+                        const dias = Math.floor(tempoRestante / (1000 * 60 * 60 * 24));
+                        const horas = Math.floor((tempoRestante % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutos = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                        const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+                        contador.textContent = `${dias} dias ${horas}:${minutos}:${segundos}`;
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
