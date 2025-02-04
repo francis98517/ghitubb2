@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro e Login - Ghitubb2</title>
+    <title>Cadastro e Login - Vercel</title>
     <style>
         * {
             margin: 0;
@@ -41,14 +41,14 @@
             font-weight: 800;
             text-align: center;
             margin-bottom: 24px;
-            color: #0066cc; /* Azul premium */
+            color: #e74c3c; /* Vermelho descarregado */
         }
 
         h2 {
             text-align: center;
             margin-bottom: 24px;
             font-size: 28px;
-            color: #004a99; /* Azul escuro mais profissional */
+            color: #e74c3c; /* Vermelho descarregado */
             font-weight: 600;
         }
 
@@ -64,7 +64,7 @@
         }
 
         input:focus {
-            border-color: #0066cc;
+            border-color: #e74c3c; /* Vermelho descarregado */
             outline: none;
             background-color: #fff;
         }
@@ -72,7 +72,7 @@
         button {
             width: 100%;
             padding: 18px;
-            background-color: #0066cc;
+            background-color: #e74c3c; /* Vermelho descarregado */
             color: #fff;
             border: none;
             border-radius: 10px;
@@ -83,11 +83,11 @@
         }
 
         button:hover {
-            background-color: #005bb5;
+            background-color: #c0392b; /* Vermelho mais intenso */
         }
 
         a {
-            color: #0066cc;
+            color: #e74c3c; /* Vermelho descarregado */
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
@@ -162,24 +162,49 @@
                 padding: 14px;
             }
         }
+
+        /* Estilo do logotipo do Telegram */
+        .telegram-logo-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .telegram-logo-container img {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .telegram-logo-container img:hover {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Nome da Plataforma -->
-        <div class="platform-name">Ghitubb2</div>
+        <div class="platform-name">Vercel</div>
 
         <!-- Tela de Login -->
         <div id="login" class="form-container">
             <h2>Login</h2>
             <form id="form-login">
-                <input type="text" id="telefone-login" name="telefone-login" placeholder="Número de Telefone (sem código do país)" required>
+                <input type="text" id="telefone-login" name="telefone-login" placeholder="Número de Telefone ou E-mail" required>
                 <input type="password" id="senha-login" name="senha-login" placeholder="Senha" required>
                 <button type="submit">Entrar</button>
             </form>
             <div id="feedback-login" class="feedback"></div>
             <div class="toggle-form">
                 <p>Não tem uma conta? <a href="#" id="ir-cadastro">Cadastre-se</a></p>
+            </div>
+            
+            <!-- Logotipo do Telegram para suporte -->
+            <div class="telegram-logo-container">
+                <p>Com dúvidas? Clique no logo do Telegram abaixo para entrar no nosso canal:</p>
+                <a href="https://t.me/seucanaltelegram" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Telegram_Logo.svg" alt="Logo do Telegram">
+                </a>
             </div>
         </div>
 
@@ -189,11 +214,8 @@
             <form id="form-cadastro">
                 <input type="text" id="nome" name="nome" placeholder="Nome Completo" required>
 
-                <!-- Número de telefone com código de país fixo (+244) -->
-                <div class="telefone-container">
-                    <span class="codigo-pais">+244</span>
-                    <input type="text" id="telefone" name="telefone" class="telefone-input" placeholder="Número de Telefone (9 dígitos)" required maxlength="9">
-                </div>
+                <!-- Número de telefone ou e-mail -->
+                <input type="text" id="telefone" name="telefone" placeholder="Número de Telefone ou E-mail" required>
                 <div id="feedback-telefone" class="error"></div>
 
                 <input type="password" id="senha" name="senha" placeholder="Senha (mínimo 6 caracteres)" required>
@@ -244,6 +266,18 @@
                 loginContainer.style.display = 'block';
             });
 
+            // Função para validar e-mail
+            function validarEmail(email) {
+                const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                return regexEmail.test(email);
+            }
+
+            // Função para validar número de telefone (apenas números)
+            function validarTelefone(telefone) {
+                const regexTelefone = /^[0-9]{9}$/; // Considerando o número de telefone com 9 dígitos
+                return regexTelefone.test(telefone);
+            }
+
             // Função para validar telefone único
             function validarTelefoneUnico(telefone) {
                 return fetch('https://meuappi.onrender.com/usuarios')  // Alterado para sua API
@@ -286,28 +320,34 @@
                 feedbackConfirmarSenha.textContent = '';
                 feedbackCodigoConvite.textContent = '';
 
-                // Verificar se o número de telefone tem 9 dígitos
-                if (telefone.length !== 9) {
-                    feedbackTelefone.textContent = 'O número de telefone deve ter 9 dígitos.';
+                // Verificar se o número de telefone ou e-mail é válido
+                if (validarEmail(telefone)) {
+                    // E-mail válido, continue
+                } else if (!validarTelefone(telefone)) {
+                    feedbackTelefone.textContent = 'O número de telefone ou e-mail fornecido não é válido.';
+                    document.getElementById('telefone').style.borderColor = 'red';
                     isValid = false;
                 }
 
-                // Verificar telefone único
+                // Verificar telefone único ou e-mail único
                 const isTelefoneUnico = await validarTelefoneUnico(telefone);
                 if (!isTelefoneUnico) {
-                    feedbackTelefone.textContent = 'Número de telefone já cadastrado.';
+                    feedbackTelefone.textContent = 'Número de telefone ou e-mail já cadastrado.';
+                    document.getElementById('telefone').style.borderColor = 'red';
                     isValid = false;
                 }
 
                 // Verificar se a senha tem pelo menos 6 caracteres
                 if (senha.length < 6) {
                     feedbackSenha.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+                    document.getElementById('senha').style.borderColor = 'red';
                     isValid = false;
                 }
 
                 // Verificar se as senhas coincidem
                 if (senha !== confirmarSenha) {
                     feedbackConfirmarSenha.textContent = 'As senhas não coincidem.';
+                    document.getElementById('confirmar-senha').style.borderColor = 'red';
                     isValid = false;
                 }
 
@@ -315,6 +355,7 @@
                 const isCodigoValido = await validarCodigoConvite(codigoConvite);
                 if (!isCodigoValido) {
                     feedbackCodigoConvite.textContent = 'O código de convite não é válido.';
+                    document.getElementById('codigo-convite').style.borderColor = 'red';
                     isValid = false;
                 }
 
@@ -378,25 +419,53 @@
                 const telefoneLogin = document.getElementById('telefone-login').value;
                 const senhaLogin = document.getElementById('senha-login').value;
 
-                fetch('https://meuappi.onrender.com/usuarios')
-                .then(res => res.json())
-                .then(data => {
-                    const usuario = data.find(u => u.telefone === telefoneLogin && u.senha === senhaLogin);
-                    if (usuario) {
-                        feedbackLogin.textContent = 'Login bem-sucedido!';
-                        feedbackLogin.className = 'success';
-                        localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
-                        window.location.href = 'dashboard.html'; // Página de dashboard após login
-                    } else {
-                        feedbackLogin.textContent = 'Telefone ou senha incorretos.';
+                // Verificar se é e-mail ou telefone
+                if (validarEmail(telefoneLogin)) {
+                    // Se for e-mail
+                    fetch('https://meuappi.onrender.com/usuarios')
+                    .then(res => res.json())
+                    .then(data => {
+                        const usuario = data.find(u => u.email === telefoneLogin && u.senha === senhaLogin);
+                        if (usuario) {
+                            feedbackLogin.textContent = 'Login bem-sucedido!';
+                            feedbackLogin.className = 'success';
+                            localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            feedbackLogin.textContent = 'E-mail ou senha incorretos.';
+                            feedbackLogin.className = 'error';
+                        }
+                    })
+                    .catch(error => {
+                        feedbackLogin.textContent = 'Erro ao fazer login.';
                         feedbackLogin.className = 'error';
-                    }
-                })
-                .catch(error => {
-                    feedbackLogin.textContent = 'Erro ao fazer login.';
+                        console.error("Erro no login:", error);
+                    });
+                } else if (validarTelefone(telefoneLogin)) {
+                    // Se for telefone
+                    fetch('https://meuappi.onrender.com/usuarios')
+                    .then(res => res.json())
+                    .then(data => {
+                        const usuario = data.find(u => u.telefone === telefoneLogin && u.senha === senhaLogin);
+                        if (usuario) {
+                            feedbackLogin.textContent = 'Login bem-sucedido!';
+                            feedbackLogin.className = 'success';
+                            localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            feedbackLogin.textContent = 'Telefone ou senha incorretos.';
+                            feedbackLogin.className = 'error';
+                        }
+                    })
+                    .catch(error => {
+                        feedbackLogin.textContent = 'Erro ao fazer login.';
+                        feedbackLogin.className = 'error';
+                        console.error("Erro no login:", error);
+                    });
+                } else {
+                    feedbackLogin.textContent = 'Por favor, insira um número de telefone ou e-mail válido.';
                     feedbackLogin.className = 'error';
-                    console.error("Erro no login:", error);
-                });
+                }
             });
         });
     </script>
