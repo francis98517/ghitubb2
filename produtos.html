@@ -24,7 +24,7 @@
 
         h2 {
             text-align: center;
-            color: #2C3E50;
+            color: #D32F2F; /* Vermelho claro */
         }
 
         .produtos {
@@ -35,36 +35,47 @@
         }
 
         .produto {
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
+            background-color: #fff;
+            border: 2px solid #D32F2F; /* Bordas vermelhas */
             border-radius: 8px;
-            padding: 15px;
+            padding: 20px;
             width: 100%;
             max-width: 250px;
             text-align: center;
             position: relative;
             box-sizing: border-box;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .produto:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .produto h3 {
             margin: 10px 0;
+            color: #D32F2F; /* Título com cor vermelha */
+            font-size: 20px;
         }
 
         .produto p {
             font-size: 14px;
+            color: #555;
         }
 
         .botao-comprar {
-            background-color: #3498DB;
+            background-color: #D32F2F; /* Botão vermelho */
             color: white;
             padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
         }
 
         .botao-comprar:hover {
-            background-color: #2980B9;
+            background-color: #C2185B; /* Cor do botão quando passa o mouse */
         }
 
         .feedback {
@@ -144,54 +155,77 @@
 </head>
 <body>
     <div class="container">
-        <h2>Produtos Disponíveis</h2>
+        <h2>Produtos Exclusivos</h2>
         <div class="produtos">
             <!-- Produtos -->
-            <div class="produto" id="produto-mendigo">
-                <h3>Produto Mendigo</h3>
-                <p>Invista 1.000 AKZ e faça 120 AKZ diariamente em um valor de 3.000 AKZ em 25 dias. Com um rendimento de 12% ao dia, seu investimento de 1.000 AKZ renderá 120 AKZ por dia, totalizando 3.000 AKZ de lucro após 25 dias.</p>
-                <button class="botao-comprar" data-produto="mendigo">Comprar</button>
-                <div class="contador-regressivo" id="contador-mendigo"></div>
+            <div class="produto" id="produto-superstar">
+                <h3>Superstar Gold</h3>
+                <p>Invista 6.000 AKZ e faça 600 AKZ diariamente, totalizando 15.000 AKZ em 25 dias.</p>
+                <button class="botao-comprar" data-produto="superstar">Comprar</button>
+                <div class="contador-regressivo" id="contador-superstar"></div>
             </div>
-            <div class="produto" id="produto-pobre">
-                <h3>Produto Pobre</h3>
-                <p>Invista 2.500 AKZ e faça 300 AKZ diariamente em um valor de 10.000 AKZ em 25 dias. Com um rendimento de 12% ao dia, seu investimento de 2.500 AKZ renderá 300 AKZ por dia, totalizando 7.500 AKZ de lucro após 25 dias.</p>
-                <button class="botao-comprar" data-produto="pobre">Comprar</button>
-                <div class="contador-regressivo" id="contador-pobre"></div>
+
+            <div class="produto" id="produto-visionary">
+                <h3>Visionary Elite</h3>
+                <p>Invista 12.000 AKZ e faça 1.200 AKZ diariamente, alcançando 30.000 AKZ em 25 dias.</p>
+                <button class="botao-comprar" data-produto="visionary">Comprar</button>
+                <div class="contador-regressivo" id="contador-visionary"></div>
             </div>
-            <div class="produto" id="produto-rico">
-                <h3>Produto Rico</h3>
-                <p>Invista 12.000 AKZ e faça 1.440 AKZ diariamente, totalizando 48.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 12.000 AKZ gerará 1.440 AKZ por dia, resultando em 36.000 AKZ de lucro ao final de 25 dias.</p>
-                <button class="botao-comprar" data-produto="rico">Comprar</button>
-                <div class="contador-regressivo" id="contador-rico"></div>
+
+            <div class="produto" id="produto-tycoon">
+                <h3>Tycoon Pro</h3>
+                <p>Invista 24.000 AKZ e faça 2.400 AKZ diariamente, totalizando 60.000 AKZ após 25 dias.</p>
+                <button class="botao-comprar" data-produto="tycoon">Comprar</button>
+                <div class="contador-regressivo" id="contador-tycoon"></div>
             </div>
-            <div class="produto" id="produto-mais-rico">
-                <h3>Produto Mais Rico</h3>
-                <p>
-                    Invista 23.000 AKZ e faça 2.760 AKZ diariamente, totalizando 92.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 23.000 AKZ gerará 2.760 AKZ por dia, resultando em 69.000 AKZ de lucro ao final de 25 dias.
-                </p>
-                <button class="botao-comprar" data-produto="mais-rico">Comprar</button>
-                <div class="contador-regressivo" id="contador-mais-rico"></div>
+
+            <div class="produto" id="produto-elite">
+                <h3>Elite Master</h3>
+                <p>Invista 48.000 AKZ e faça 4.800 AKZ diariamente, totalizando 120.000 AKZ após 25 dias.</p>
+                <button class="botao-comprar" data-produto="elite">Comprar</button>
+                <div class="contador-regressivo" id="contador-elite"></div>
             </div>
-            <div class="produto" id="produto-boss">
-                <h3>Produto Boss</h3>
-                <p>Invista 54.000 AKZ e faça 6.480 AKZ diariamente, totalizando 216.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 54.000 AKZ gerará 6.480 AKZ por dia, resultando em 162.000 AK lucro ao final de 25 dias.</p>
-                <button class="botao-comprar" data-produto="boss">Comprar</button>
-                <div class="contador-regressivo" id="contador-boss"></div>
+
+            <div class="produto" id="produto-legend">
+                <h3>Legendary Boss</h3>
+                <p>Invista 96.000 AKZ e faça 9.600 AKZ diariamente, totalizando 240.000 AKZ após 25 dias.</p>
+                <button class="botao-comprar" data-produto="legend">Comprar</button>
+                <div class="contador-regressivo" id="contador-legend"></div>
             </div>
-            <div class="produto" id="produto-mais-boss">
-                <h3>Produto Mais Boss</h3>
-                <p>
-                    Invista 132.000 AKZ e faça 15.840 AKZ diariamente, totalizando 528.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 132.000 AKZ gerará 15.840 AKZ por dia, resultando em 396.000 AKZ de lucro ao final de 25 dias.
-                </p>
-                <button class="botao-comprar" data-produto="mais-boss">Comprar</button>
-                <div class="contador-regressivo" id="contador-mais-boss"></div>
+
+            <div class="produto" id="produto-mogul">
+                <h3>Mogul Premium</h3>
+                <p>Invista 192.000 AKZ e faça 19.200 AKZ diariamente, resultando em 480.000 AKZ após 25 dias.</p>
+                <button class="botao-comprar" data-produto="mogul">Comprar</button>
+                <div class="contador-regressivo" id="contador-mogul"></div>
             </div>
-            <div class="produto" id="produto-premium">
-                <h3>Produto Premium</h3>
-                <p>Invista 223.000 AKZ e faça 26.760 AKZ diariamente, totalizando 892.000 AKZ após 25 dias. Com um rendimento de 12% ao dia, seu investimento de 223.000 AKZ gerará 26.760 AKZ por dia, resultando em 669.000 AK lucro ao final de 25 dias.</p>
-                <button class="botao-comprar" data-produto="premium">Comprar</button>
-                <div class="contador-regressivo" id="contador-premium"></div>
+
+            <div class="produto" id="produto-royal">
+                <h3>Royal Invest</h3>
+                <p>Invista 384.000 AKZ e faça 38.400 AKZ diariamente, alcançando 960.000 AKZ após 25 dias.</p>
+                <button class="botao-comprar" data-produto="royal">Comprar</button>
+                <div class="contador-regressivo" id="contador-royal"></div>
+            </div>
+
+            <div class="produto" id="produto-eliteplus">
+                <h3>Elite Plus</h3>
+                <p>Invista 768.000 AKZ e faça 76.800 AKZ diariamente, totalizando 1.920.000 AKZ após 25 dias.</p>
+                <button class="botao-comprar" data-produto="eliteplus">Comprar</button>
+                <div class="contador-regressivo" id="contador-eliteplus"></div>
+            </div>
+
+            <div class="produto" id="produto-legendaryplus">
+                <h3>Legendary Plus</h3>
+                <p>Invista 1.536.000 AKZ e faça 153.600 AKZ diariamente, alcançando 3.840.000 AKZ após 25 dias.</p>
+                <button class="botao-comprar" data-produto="legendaryplus">Comprar</button>
+                <div class="contador-regressivo" id="contador-legendaryplus"></div>
+            </div>
+
+            <div class="produto" id="produto-ultimate">
+                <h3>Ultimate Invest</h3>
+                <p>Invista 3.072.000 AKZ e faça 307.200 AKZ diariamente, totalizando 7.680.000 AKZ após 25 dias.</p>
+                <button class="botao-comprar" data-produto="ultimate">Comprar</button>
+                <div class="contador-regressivo" id="contador-ultimate"></div>
             </div>
         </div>
 
@@ -262,91 +296,90 @@
                         usuarioLogado.saldo = novoSaldo;
                         localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
 
-                        feedbackCompra.textContent = 'Compra realizada com sucesso!';
-                        feedbackCompra.classList.remove('error');
-                        feedbackCompra.classList.add('success');
-                        mostrarFeedback();
-
-                        // Registrar a compra no banco de dados (endpoint /produtos)
-                        const produtoComprado = {
-                            usuarioId: usuarioLogado.id,
-                            produto: produtoId,
-                            valor: valorProduto,
-                            dataCompra: new Date().toISOString()
-                        };
-
+                        // Marcar o produto como comprado
                         fetch('https://meuappi.onrender.com/produtos', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify(produtoComprado)
+                            body: JSON.stringify({
+                                usuarioId: usuarioLogado.id,
+                                produto: produtoId,
+                                dataCompra: new Date().toISOString()
+                            })
                         })
-                        .then(response => response.json())
-                        .then(produto => {
-                            console.log('Compra registrada com sucesso:', produto);
+                        .then(response => {
+                            // Adicionar lógica para iniciar a contagem regressiva
+                            iniciarContagemRegressiva(produtoId);
+                            feedbackCompra.textContent = `Produto ${produtoId} comprado com sucesso!`;
+                            feedbackCompra.classList.add('success');
+                            mostrarFeedback();
                         })
                         .catch(error => {
-                            console.error('Erro ao registrar a compra:', error);
+                            feedbackCompra.textContent = 'Erro ao registrar a compra!';
+                            feedbackCompra.classList.add('error');
+                            mostrarFeedback();
                         });
-
-                        // Desabilitar o botão e adicionar classe 'indisponivel'
-                        const produtoElemento = document.getElementById(`produto-${produtoId}`);
-                        produtoElemento.classList.add('indisponivel');
-                        this.disabled = true;
-
-                        // Iniciar a contagem regressiva
-                        iniciarContagemRegressiva(produtoId, produtoComprado.dataCompra);
                     })
                     .catch(error => {
-                        feedbackCompra.textContent = 'Erro ao atualizar o saldo!';
-                        feedbackCompra.classList.add('error');
-                        mostrarFeedback();
-                        console.error('Erro ao atualizar o saldo:', error);
+                        console.error('Erro ao atualizar o saldo do usuário:', error);
                     });
                 });
             });
 
+            // Função para mostrar o feedback
+            function mostrarFeedback() {
+                feedbackCompra.style.display = 'block';
+                setTimeout(() => {
+                    feedbackCompra.style.display = 'none';
+                }, 5000); // Esconde o feedback após 5 segundos
+            }
+
+            // Função para obter o valor do produto
             function obterValorProduto(produtoId) {
                 switch (produtoId) {
-                    case 'mendigo': return 1000;
-                    case 'pobre': return 2500;
-                    case 'rico': return 12000;
-                    case 'mais-rico': return 23000;
-                    case 'boss': return 54000;
-                    case 'mais-boss': return 132000;
-                    case 'premium': return 223000;
+                    case 'superstar': return 6000;
+                    case 'visionary': return 12000;
+                    case 'tycoon': return 24000;
+                    case 'elite': return 48000;
+                    case 'legend': return 96000;
+                    case 'mogul': return 192000;
+                    case 'royal': return 384000;
+                    case 'eliteplus': return 768000;
+                    case 'legendaryplus': return 1536000;
+                    case 'ultimate': return 3072000;
                     default: return 0;
                 }
             }
 
-            function mostrarFeedback() {
-                feedbackCompra.style.display = 'block';
-                setTimeout(() => {
-                    feedbackCompra.style.display = 'none';  // Desaparece após 5 segundos
-                }, 5000); // Tempo de desaparecimento
-            }
-
+            // Função para iniciar a contagem regressiva
             function iniciarContagemRegressiva(produtoId, dataCompra) {
-                const contador = document.getElementById(`contador-${produtoId}`);
-                const dataCompraDate = new Date(dataCompra); // Data de compra do produto
-                const dataExpiracao = new Date(dataCompraDate);
-                dataExpiracao.setDate(dataCompraDate.getDate() + 25); // Expiração em 25 dias
+                const produtoElemento = document.getElementById(`produto-${produtoId}`);
+                const contadorElemento = produtoElemento.querySelector('.contador-regressivo');
+
+                let tempoRestante = calcularTempoRestante(dataCompra);
 
                 const intervalo = setInterval(function () {
-                    const agora = new Date();
-                    const tempoRestante = dataExpiracao - agora;
+                    tempoRestante--;
+
                     if (tempoRestante <= 0) {
                         clearInterval(intervalo);
-                        contador.textContent = 'Compra expirada!';
+                        contadorElemento.textContent = 'Tempo expirado!';
                     } else {
-                        const dias = Math.floor(tempoRestante / (1000 * 60 * 60 * 24));
-                        const horas = Math.floor((tempoRestante % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutos = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
-                        const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
-                        contador.textContent = `${dias} dias ${horas}:${minutos}:${segundos}`;
+                        const dias = Math.floor(tempoRestante / (24 * 60 * 60));
+                        const horas = Math.floor((tempoRestante % (24 * 60 * 60)) / 3600);
+                        const minutos = Math.floor((tempoRestante % 3600) / 60);
+                        const segundos = tempoRestante % 60;
+                        contadorElemento.textContent = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
                     }
                 }, 1000);
+            }
+
+            function calcularTempoRestante(dataCompra) {
+                const dataAtual = new Date();
+                const dataCompraDate = new Date(dataCompra);
+                const diffMs = dataAtual - dataCompraDate;
+                return Math.max(0, 25 * 24 * 60 * 60 - Math.floor(diffMs / 1000)); // Contagem regressiva para 25 dias
             }
         });
     </script>

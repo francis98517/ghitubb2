@@ -12,8 +12,8 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f1f1f1;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
         }
 
         .container {
@@ -24,22 +24,21 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            background-color: #0044cc;
         }
 
         .form-wrapper {
             width: 100%;
-            max-width: 480px;
-            background-color: #fff;
+            max-width: 500px;
+            background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
         h2 {
             font-size: 24px;
-            color: #0044cc;
+            color: #d32f2f;
             margin-bottom: 20px;
         }
 
@@ -63,14 +62,14 @@
         }
 
         input:focus {
-            border-color: #0044cc;
+            border-color: #d32f2f;
             outline: none;
         }
 
         button {
             width: 100%;
             padding: 15px;
-            background-color: #0044cc;
+            background-color: #d32f2f;
             border: none;
             border-radius: 8px;
             color: white;
@@ -80,7 +79,7 @@
         }
 
         button:hover {
-            background-color: #0033a0;
+            background-color: #c62828;
         }
 
         .feedback {
@@ -97,8 +96,8 @@
         }
 
         .dicas {
-            background-color: #e1f4ff;
-            border-left: 5px solid #0044cc;
+            background-color: #ffebee;
+            border-left: 5px solid #d32f2f;
             padding: 15px;
             margin-top: 20px;
             font-size: 14px;
@@ -114,6 +113,18 @@
         .dicas p {
             font-size: 14px;
             margin: 5px 0;
+        }
+
+        .historico-btn {
+            display: block;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #d32f2f;
+            text-decoration: none;
+        }
+
+        .historico-btn:hover {
+            text-decoration: underline;
         }
 
         /* Media Queries */
@@ -173,7 +184,7 @@
         <div class="form-wrapper">
             <h2>Retirar Fundos</h2>
             <form id="form-retirar">
-                <label for="valor">Valor a ser retirado (mínimo 1.500 AKZ, máximo 2.000.000 AKZ)</label>
+                <label for="valor">Valor a ser retirado (mínimo 700 AKZ, máximo 999.999.999.999 AKZ)</label>
                 <input type="number" id="valor" name="valor" placeholder="Valor" required>
 
                 <label for="iban">IBAN</label>
@@ -187,14 +198,19 @@
 
                 <button type="submit">Retirar</button>
             </form>
+
+            <!-- Botão de histórico, redirecionando para outra página -->
+            <a href="historico.html" id="btn-historico" class="historico-btn">Ver Histórico de Retiradas</a>
+
             <div id="feedback-retirada" class="feedback"></div>
         </div>
 
         <div class="dicas">
             <h3>Dicas:</h3>
-            <p>1. A taxa de saque é de 11% sobre o valor total.</p>
-            <p>2. O valor mínimo de saque é 1.500 AKZ e o máximo é 2.000.000 AKZ.</p>
-            <p>3. Você pode realizar saques todos os dias.</p>
+            <p>- As transferências estão disponíveis 24/7</p>
+            <p>- Cobramos 16% de taxa no ato de retirada.</p>
+            <p>- Após solicitar a transferência, você precisará aguardar até no máximo 24h para o dinheiro chegar em sua conta bancária.</p>
+            <p>- O valor mínimo de saque é 700 AKZ e o máximo é 999.999.999.999 AKZ.</p>
         </div>
     </div>
 
@@ -203,15 +219,12 @@
             const formRetirar = document.getElementById('form-retirar');
             const feedbackRetirada = document.getElementById('feedback-retirada');
             
-            // Recuperar usuário logado do localStorage
             const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
 
-            // Verificar se o usuário está logado
             if (!usuarioLogado) {
-                window.location.href = 'index.html'; // Se não estiver logado, redireciona para login
+                window.location.href = 'index.html'; 
             }
 
-            // Função para processar a retirada
             formRetirar.addEventListener('submit', function (e) {
                 e.preventDefault();
 
@@ -220,28 +233,23 @@
                 const banco = document.getElementById('banco').value;
                 const beneficiario = document.getElementById('beneficiario').value;
 
-                // Verificar se o valor está dentro do limite de saque
-                if (valor < 1500 || valor > 2000000) {
-                    feedbackRetirada.textContent = 'O valor de saque deve ser entre 1.500 AKZ e 2.000.000 AKZ.';
+                if (valor < 700 || valor > 999999999999) {
+                    feedbackRetirada.textContent = 'O valor de saque deve ser entre 700 AKZ e 999.999.999.999 AKZ.';
                     feedbackRetirada.className = 'error';
                     return;
                 }
 
-                // Verificar se o saldo é suficiente para realizar o saque
                 if (valor <= 0 || valor > usuarioLogado.saldo) {
                     feedbackRetirada.textContent = 'Valor inválido ou saldo insuficiente.';
                     feedbackRetirada.className = 'error';
                     return;
                 }
 
-                // Calcular a taxa de saque (11%)
-                const taxa = valor * 0.11;
+                const taxa = valor * 0.16;
                 const valorLiquido = valor - taxa;
 
-                // Deduzir o saldo do usuário
                 const saldoRestante = usuarioLogado.saldo - valor;
 
-                // Dados da retirada
                 const retirada = {
                     valor,
                     taxa,
@@ -253,7 +261,6 @@
                     usuarioId: usuarioLogado.id
                 };
 
-                // Atualizar o saldo do usuário no banco de dados
                 fetch(`https://meuappi.onrender.com/usuarios/${usuarioLogado.id}`, {
                     method: 'PATCH',
                     headers: {
@@ -268,7 +275,6 @@
                     return response.json();
                 })
                 .then(() => {
-                    // Registrar a retirada no banco de dados
                     return fetch('https://meuappi.onrender.com/retiradas', {
                         method: 'POST',
                         headers: {
@@ -284,15 +290,12 @@
                     return response.json();
                 })
                 .then(() => {
-                    // Feedback de sucesso
                     feedbackRetirada.textContent = `Retirada realizada com sucesso! Você retirou ${valor} AKZ, a taxa foi de ${taxa} AKZ e você recebeu ${valorLiquido} AKZ.`;
                     feedbackRetirada.className = 'success';
 
-                    // Atualizar o saldo do usuário no localStorage
                     usuarioLogado.saldo = saldoRestante;
                     localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
 
-                    // Opcional: Limpar o formulário
                     formRetirar.reset();
                 })
                 .catch(error => {

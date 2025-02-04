@@ -3,53 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabela de Investimentos - Ghitubb2</title>
+    <title>Tabela de Investimentos</title>
     <style>
-        /* Estilos gerais */
         body {
             font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 24px;
-            color: #fff;
-            margin-top: 20px;
-            background-color: #0088cc; /* Azul */
-            padding: 15px;
         }
 
         .container {
             width: 90%;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 20px auto;
-            padding: 20px;
+            padding: 30px;
             background-color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #D32F2F;
+            font-size: 2rem;
+            margin-bottom: 30px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
-            padding: 12px;
             text-align: center;
+            padding: 15px;
             border: 1px solid #ddd;
+            color: #333;
+            font-size: 1rem;
         }
 
         th {
-            background-color: #0088cc; /* Azul */
+            background-color: #D32F2F;
             color: white;
+            font-weight: bold;
         }
 
-        td {
+        tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
@@ -57,232 +60,124 @@
             background-color: #f1f1f1;
         }
 
-        .lucro {
-            color: #0088cc;
-            font-weight: bold;
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
         }
 
-        /* Estilo das dicas */
-        .dicas {
-            margin-top: 30px;
-            font-size: 18px;
-            color: #333;
-        }
-
-        .dicas h3 {
-            color: #0088cc; /* Azul */
-        }
-
-        .dicas p {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        /* Responsividade */
+        /* Media Queries */
         @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
             table {
-                font-size: 14px;
+                font-size: 0.9rem;
             }
 
             th, td {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 20px;
-            }
-
-            .dicas {
-                font-size: 14px;
+                padding: 12px;
             }
         }
 
         @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+
             table {
-                font-size: 12px;
+                font-size: 0.8rem;
             }
 
             th, td {
-                padding: 8px;
+                padding: 10px;
             }
-
-            .container {
-                padding: 5px;
-            }
-
-            h1 {
-                font-size: 18px;
-            }
-
-            .dicas {
-                font-size: 12px;
-            }
-
-            .dicas p {
-                margin-bottom: 5px;
-            }
-        }
-
-        /* Ajustes para botões e links */
-        a {
-            color: #0088cc;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <h1>Tabela de Investimentos - Ghitubb2</h1>
-
     <div class="container">
+        <h1>Tabela de Investimentos</h1>
+
         <table>
             <thead>
                 <tr>
-                    <th>Investimento</th>
-                    <th>Valor Investido</th>
-                    <th>Lucro Diário (12%)</th>
-                    <th>Valor Total (25 dias)</th>
+                    <th>Plano de Investimento</th>
+                    <th>Valor Inicial (AKZ)</th>
+                    <th>Retorno Diário (AKZ)</th>
+                    <th>Retorno Total após 25 dias (AKZ)</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Linha 1 -->
                 <tr>
-                    <td>Investimento mendigo</td>
-                    <td>1.000 AKZ</td>
-                    <td class="lucro">120 AKZ</td> <!-- 12% de 1.000 AKZ -->
-                    <td>3.000 AKZ</td> <!-- 1.000 + (120 * 25) -->
+                    <td>Superstar Gold</td>
+                    <td>6.000</td>
+                    <td>600</td>
+                    <td>15.000</td>
                 </tr>
-
-                <!-- Linha 2 -->
                 <tr>
-                    <td>Investimento pobre</td>
-                    <td>2.500 AKZ</td>
-                    <td class="lucro">300 AKZ</td> <!-- 12% de 2.500 AKZ -->
-                    <td>7.500 AKZ</td> <!-- 2.500 + (300 * 25) -->
+                    <td>Visionary Elite</td>
+                    <td>12.000</td>
+                    <td>1.200</td>
+                    <td>30.000</td>
                 </tr>
-
-                <!-- Linha 3 -->
                 <tr>
-                    <td>Investimento rico</td>
-                    <td>12.000 AKZ</td>
-                    <td class="lucro">1.440 AKZ</td> <!-- 12% de 12.000 AKZ -->
-                    <td>36.000 AKZ</td> <!-- 12.000 + (1.440 * 25) -->
+                    <td>Tycoon Pro</td>
+                    <td>24.000</td>
+                    <td>2.400</td>
+                    <td>60.000</td>
                 </tr>
-
-                <!-- Linha 4 -->
                 <tr>
-                    <td>Investimento mais rico</td>
-                    <td>23.000 AKZ</td>
-                    <td class="lucro">2.760 AKZ</td> <!-- 12% de 23.000 AKZ -->
-                    <td>69.000 AKZ</td> <!-- 23.000 + (2.760 * 25) -->
+                    <td>Elite Master</td>
+                    <td>48.000</td>
+                    <td>4.800</td>
+                    <td>120.000</td>
                 </tr>
-
-                <!-- Linha 5 -->
                 <tr>
-                    <td>Investimento boss</td>
-                    <td>132.000 AKZ</td>
-                    <td class="lucro">15.840 AKZ</td> <!-- 12% de 132.000 AKZ -->
-                    <td>396.000 AKZ</td> <!-- 132.000 + (15.840 * 25) -->
+                    <td>Legendary Boss</td>
+                    <td>96.000</td>
+                    <td>9.600</td>
+                    <td>240.000</td>
                 </tr>
-
-                <!-- Linha 6 -->
                 <tr>
-                    <td>Investimento mais boss <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-primary" style="width: 25%" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Text</div>
-                    </div> </td>
-                    <td>54.000 AKZ</td>
-                    <td class="lucro">6.480 AKZ</td> <!-- 12% de 54.000 AKZ -->
-                    <td>162.000 AKZ</td> <!-- 54.000 + (6.480 * 25) -->
+                    <td>Mogul Premium</td>
+                    <td>192.000</td>
+                    <td>19.200</td>
+                    <td>480.000</td>
                 </tr>
-
-                <!-- Linha 7 -->
                 <tr>
-                    <td>Investimento premium</td>
-                    <td>223.000 AKZ</td>
-                    <td class="lucro">26.760 AKZ</td> <!-- 12% de 223.000 AKZ -->
-                    <td>669.000 AKZ</td> <!-- 223.000 + (26.760 * 25) -->
+                    <td>Royal Invest</td>
+                    <td>384.000</td>
+                    <td>38.400</td>
+                    <td>960.000</td>
                 </tr>
-            </tbody>
-        </table>
-
-        <h2>Convite de Amigos - e Ganhes 23% de Bônus</h2> <!-- Atualizado para 23% -->
-        <table>
-            <thead>
                 <tr>
-                    <th>Convite</th>
-                    <th>Valor Investido</th>
-                    <th>Bônus (23%)</th> <!-- Atualizado para 23% -->
+                    <td>Elite Plus</td>
+                    <td>768.000</td>
+                    <td>76.800</td>
+                    <td>1.920.000</td>
                 </tr>
-            </thead>
-            <tbody>
-                <!-- Linha 1 - Convite 1 -->
                 <tr>
-                    <td>Convide para investir em mendigo 1.000 AKZ</td>
-                    <td>1.000 AKZ</td>
-                    <td class="lucro">230 AKZ</td> <!-- 23% de 1.000 AKZ -->
+                    <td>Legendary Plus</td>
+                    <td>1.536.000</td>
+                    <td>153.600</td>
+                    <td>3.840.000</td>
                 </tr>
-
-                <!-- Linha 2 - Convite 2 -->
                 <tr>
-                    <td>Convide para investir em pobre 2.500 AKZ</td>
-                    <td>2.500 AKZ</td>
-                    <td class="lucro">575 AKZ</td> <!-- 23% de 2.500 AKZ -->
-                </tr>
-
-                <!-- Linha 3 - Convite 3 -->
-                <tr>
-                    <td>Convide para investir em boss 12.000 AKZ</td>
-                    <td>12.000 AKZ</td>
-                    <td class="lucro">2.760 AKZ</td> <!-- 23% de 12.000 AKZ -->
-                </tr>
-
-                <!-- Linha 4 - Convite 4 -->
-                <tr>
-                    <td>Convide para investir em mais boss 23.000 AKZ</td>
-                    <td>23.000 AKZ</td>
-                    <td class="lucro">5.290 AKZ</td> <!-- 23% de 23.000 AKZ -->
-                </tr>
-
-                <!-- Linha 5 - Convite 5 -->
-                <tr>
-                    <td>Convide para investir em rico 132.000 AKZ</td>
-                    <td>132.000 AKZ</td>
-                    <td class="lucro">30.360 AKZ</td> <!-- 23% de 132.000 AKZ -->
-                </tr>
-
-                <!-- Linha 6 - Convite 6 -->
-                <tr>
-                    <td>Convide para investir em mais rico 54.000 AKZ</td>
-                    <td>54.000 AKZ</td>
-                    <td class="lucro">12.420 AKZ</td> <!-- 23% de 54.000 AKZ -->
-                </tr>
-
-                <!-- Linha 7 - Convite 7 -->
-                <tr>
-                    <td>Convide para investir em premium 223.000 AKZ</td>
-                    <td>223.000 AKZ</td>
-                    <td class="lucro">51.290 AKZ</td> <!-- 23% de 223.000 AKZ -->
+                    <td>Ultimate Invest</td>
+                    <td>3.072.000</td>
+                    <td>307.200</td>
+                    <td>7.680.000</td>
                 </tr>
             </tbody>
         </table>
+    </div>
 
-        <!-- Dicas de progressão de ganhos -->
-        <div class="dicas">
-            <h3>Dicas para Conquistar Novos Níveis</h3>
-            <p><strong>Convide 5 membros ativos</strong> para se tornar <strong>Assistente</strong> e ganhe  bônus semanalmente de <strong>4.500 AKZ</strong>.</p>
-            <p><strong>Convide 10 membros ativos</strong> para se tornar <strong>Supervisor</strong> e ganhe  bônus semanalmente de <strong>9.000 AKZ</strong>.</p>
-            <p><strong>Convide 20 membros ativos</strong> para se tornar <strong>Gerente</strong> e ganhe  bônus semanalmente de <strong>18.000 AKZ</strong>.</p>
-            <p>Quanto mais você convidar, maiores serão seus ganhos semanais! Comece agora e aproveite os benefícios,<strong> em caso de dúvidas entre em contacto com o gerente<strong>.</strong></p>
-        </div>
-
+    <div class="footer">
+        <p>Investir com responsabilidade. Consulte um especialista antes de tomar decisões financeiras.</p>
     </div>
 
 </body>

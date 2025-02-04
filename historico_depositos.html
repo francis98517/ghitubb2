@@ -35,11 +35,6 @@
             transition: 0.3s ease;
         }
 
-        .registro.red {
-            background-color: #ff4d4d;
-            color: white;
-        }
-
         .registro.white {
             background-color: #fff;
             color: black;
@@ -91,9 +86,9 @@
 </head>
 <body>
     <div class="container">
-        <h2>Registros de Transações</h2>
+        <h2>Registros de Depósitos</h2>
         <div id="registros-container">
-            <!-- Os registros serão inseridos aqui como cartões -->
+            <!-- Os registros de depósitos serão inseridos aqui -->
         </div>
         <div id="feedback-registros" class="feedback"></div>
     </div>
@@ -113,39 +108,6 @@
             if (!usuarioLogado) {
                 window.location.href = 'index.html'; // Se não estiver logado, redireciona para login
             }
-
-            // Buscar registros de retiradas do banco de dados
-            fetch('https://meuappi.onrender.com/retiradas')  // Buscar todas as retiradas no banco de dados
-                .then(response => response.json())
-                .then(transacoes => {
-                    // Filtrar transações de retiradas do usuário logado
-                    const transacoesUsuario = transacoes.filter(transacao => transacao.usuarioId === usuarioLogado.id);
-
-                    // Exibir transações de retiradas como cartões
-                    if (transacoesUsuario.length === 0) {
-                        feedbackRegistros.textContent = 'Você não tem registros de retiradas ainda.';
-                        feedbackRegistros.className = 'error';
-                    } else {
-                        transacoesUsuario.forEach(transacao => {
-                            const div = document.createElement('div');
-                            div.classList.add('registro', 'red');
-                            div.innerHTML = `
-                                <div class="info">
-                                    <span><strong>Data:</strong> ${new Date(transacao.data).toLocaleString()}</span>
-                                    <span><strong>Tipo:</strong> Retirada</span>
-                                    <span><strong>Valor:</strong> AKZ- ${transacao.valor}</span>
-                                    <span><strong>Beneficiário:</strong> ${transacao.beneficiario}</span>
-                                    <span><strong>Banco:</strong> ${transacao.banco}</span>
-                                </div>
-                            `;
-                            registrosContainer.appendChild(div);
-                        });
-                    }
-                })
-                .catch(error => {
-                    feedbackRegistros.textContent = 'Erro ao carregar os registros de retiradas.';
-                    feedbackRegistros.className = 'error';
-                });
 
             // Adicionando o Histórico de Depósitos
             fetch('https://meuappi.onrender.com/depositos')  // Buscar todos os depósitos no banco de dados
@@ -175,39 +137,6 @@
                 })
                 .catch(error => {
                     feedbackRegistros.textContent = 'Erro ao carregar os registros de depósitos.';
-                    feedbackRegistros.className = 'error';
-                });
-
-            // Buscar histórico de compras na API de produtos
-            fetch('https://meuappi.onrender.com/produtos')  // Buscar histórico de compras
-                .then(response => response.json())
-                .then(produtosComprados => {
-                    // Filtrar compras do usuário logado
-                    const comprasUsuario = produtosComprados.filter(produto => produto.usuarioId === usuarioLogado.id);
-
-                    // Exibir compras como cartões
-                    if (comprasUsuario.length === 0) {
-                        feedbackRegistros.textContent = 'Você não fez compras ainda.';
-                        feedbackRegistros.className = 'error';
-                    } else {
-                        comprasUsuario.forEach(produto => {
-                            const div = document.createElement('div');
-                            div.classList.add('registro', 'white');
-                            div.innerHTML = `
-                                <div class="info">
-                                    <span><strong>Data de Compra:</strong> ${new Date(produto.dataCompra).toLocaleString()}</span>
-                                    <span><strong>Data de Expiração:</strong> ${new Date(produto.dataExpiracao).toLocaleString()}</span>
-                                    <span><strong>Produto:</strong> ${produto.nomeProduto}</span>
-                                    <span><strong>Valor:</strong> AKZ- ${produto.valor}</span>
-                                    <span><strong>Banco:</strong> N/A</span>
-                                </div>
-                            `;
-                            registrosContainer.appendChild(div);
-                        });
-                    }
-                })
-                .catch(error => {
-                    feedbackRegistros.textContent = 'Erro ao carregar os registros de compras.';
                     feedbackRegistros.className = 'error';
                 });
         });

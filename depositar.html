@@ -1,229 +1,182 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Depósito</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #e0e0e0;
+            background-color: #d32f2f; /* Cor de fundo vermelha */
+            color: white; /* Cor do texto branco */
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            color: #333;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            overflow: hidden; /* Impede rolagem da página */
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px; /* Tamanho do ícone */
+            height: 30px; /* Altura total do ícone */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .bar {
+            height: 5px;
+            background-color: white;
+            border-radius: 5px;
         }
 
         .container {
-            width: 100%;
-            max-width: 480px;
-            background-color: #fff;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #b71c1c;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
         }
 
-        h2 {
-            text-align: center;
-            color: #0066cc;
-            margin-bottom: 24px;
-            font-size: 26px;
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
         }
 
-        .informacoes {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .informacoes div {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-
-        .informacoes div span {
-            font-weight: bold;
-        }
-
-        button {
-            padding: 12px;
-            background-color: #0066cc;
-            color: white;
+        .banco-btn {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 18px;
+            background-color: white;
+            color: #d32f2f;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            width: 100%;
-            font-size: 16px;
+            width: 200px;
+            transition: background-color 0.3s;
         }
 
-        button:hover {
-            background-color: #005bb5;
+        .banco-btn:hover {
+            background-color: #ffebee;
         }
 
         .dicas {
-            margin-top: 20px;
+            margin-top: 30px;
             font-size: 14px;
-            color: #555;
-        }
-
-        .dicas ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .dicas ul li {
-            margin-bottom: 10px;
-        }
-
-        .mensagem {
-            padding: 12px;
-            margin: 10px 0;
+            background-color: #ffebee;
+            color: #d32f2f;
+            padding: 15px;
             border-radius: 5px;
-            width: 100%;
-            text-align: center;
+            line-height: 1.5;
         }
 
-        .mensagem.sucesso {
-            background-color: #2ecc71;
-            color: white;
+        .dicas h3 {
+            margin-top: 0;
+            font-size: 16px;
         }
 
-        .mensagem.erro {
-            background-color: #e74c3c;
-            color: white;
-        }
-
+        /* Responsividade */
         @media (max-width: 768px) {
             .container {
+                width: 90%;
                 padding: 20px;
             }
 
-            h2 {
-                font-size: 22px;
+            h1 {
+                font-size: 20px;
             }
 
-            button {
-                padding: 14px;
-                font-size: 14px;
+            .banco-btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
             }
 
-            .informacoes div {
-                padding: 10px;
+            .dicas {
+                font-size: 12px;
             }
         }
 
         @media (max-width: 480px) {
-            h2 {
-                font-size: 20px;
+            .container {
+                width: 90%;
+                padding: 15px;
             }
 
-            button {
-                padding: 16px;
-                font-size: 14px;
+            h1 {
+                font-size: 18px;
             }
 
-            .informacoes div {
+            .banco-btn {
                 padding: 10px;
                 font-size: 14px;
+            }
+
+            .dicas {
+                font-size: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Realizar Depósito</h2>
-        <div class="informacoes">
-            <div>
-                <span>Nome:</span>
-                <p id="nome-administrador">Jocob Tomás</p>
-                <button class="copiar-nome" id="copiar-nome">Copiar Nome</button>
-            </div>
 
-            <div>
-                <span>IBAN do Administrador:</span>
-                <p id="iban">000600002035568230109</p>
-                <button class="copiar-iban" id="copiar-iban">Copiar IBAN</button>
-            </div>
-            <div>
-                <span>Nome do Banco:</span>
-                <p id="banco">Banco BFA</p>
-            </div>
-
-            <div>
-                <span>Valor a Ser Depositado:</span>
-                <input type="number" id="valor-input" placeholder="Digite o valor" min="1" step="0.01" />
-            </div>
-
-            <div id="mensagem-feedback" class="mensagem"></div>
-
-            <button class="botao-depositar" id="depositar" onclick="redirecionarTelegram()">Depositar</button>
+    <!-- Link para o histórico de depósitos -->
+    <a href="historico_depositos.html">
+        <div class="logo">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
         </div>
+    </a>
 
+    <div class="container">
+        <h1>Escolha o seu banco</h1>
+        
+        <button class="banco-btn" onclick="irParaBanco('BFA')">BFA</button>
+        <button class="banco-btn" onclick="irParaBanco('BAI')">BAI</button>
+        <button class="banco-btn" onclick="irParaBanco('ATLANTICO')">ATLÂNTICO</button>
+        <button class="banco-btn" onclick="irParaBanco('OUTROS')">OUTROS BANCOS</button>
+        
         <div class="dicas">
-            <h3>Dicas para um Depósito Seguro:</h3>
+            <h3>Informações importantes:</h3>
             <ul>
-                <li><strong>Podes:</strong> Podes fazer depósito em qualquer banco, será processado imediatamente.</li>
-                <li><strong>Verifique o IBAN:</strong> Certifique-se de que o IBAN está correto antes de realizar o depósito.</li>
-                <li><strong>Valor Exato:</strong> Realize o depósito com o valor exato que foi informado.</li>
-                <li><strong>Depósito Confirmado:</strong> Após o depósito, entre em contato com o administrador para confirmar a transação.</li>
-                <li><strong>Evite Erros:</strong> Se tiver dúvidas, entre em contato com o suporte através do nosso canal no Telegram.</li>
+                <li><strong>Horário de depósito:</strong> de segunda a domingo, das 9h às 22h.</li>
+                <li><strong>Confirme os dados:</strong> Verifique os dados do banco antes de finalizar o depósito.</li>
+                <li><strong>Depósito seguro:</strong> Aconselhamos não compartilhar os detalhes da sua conta bancária.</li>
+                <li><strong>Fique atento:</strong> Certifique-se de que o seu pagamento foi processado antes de sair.</li>
             </ul>
         </div>
     </div>
 
     <script>
-        document.getElementById('copiar-iban').addEventListener('click', function() {
-            const iban = document.getElementById('iban').textContent;
-            navigator.clipboard.writeText(iban)
-                .then(() => {
-                    exibirMensagem('IBAN copiado com sucesso!', 'sucesso');
-                })
-                .catch(err => {
-                    exibirMensagem('Erro ao copiar IBAN: ' + err, 'erro');
-                });
-        });
-
-        document.getElementById('copiar-nome').addEventListener('click', function() {
-            const nome = document.getElementById('nome-administrador').textContent;
-            navigator.clipboard.writeText(nome)
-                .then(() => {
-                    exibirMensagem('Nome do administrador copiado com sucesso!', 'sucesso');
-                })
-                .catch(err => {
-                    exibirMensagem('Erro ao copiar o nome: ' + err, 'erro');
-                });
-        });
-
-        function exibirMensagem(mensagem, tipo) {
-            const mensagemDiv = document.getElementById('mensagem-feedback');
-            mensagemDiv.textContent = mensagem;
-            mensagemDiv.className = 'mensagem ' + tipo;
-        }
-
-        function redirecionarTelegram() {
-            const valor = document.getElementById('valor-input').value;
-
-            if (!valor || valor <= 0) {
-                exibirMensagem('Por favor, insira um valor válido para o depósito.', 'erro');
-                return;
+        function irParaBanco(bancoSelecionado) {
+            // Redireciona para a página correspondente
+            switch(bancoSelecionado) {
+                case 'BFA':
+                    window.location.href = "bfa.html";  // Página do BFA
+                    break;
+                case 'BAI':
+                    window.location.href = "bai.html";  // Página do BAI
+                    break;
+                case 'ATLANTICO':
+                    window.location.href = "atlantico.html";  // Página do ATLÂNTICO
+                    break;
+                case 'OUTROS':
+                    window.location.href = "outros_bancos.html";  // Página para OUTROS BANCOS
+                    break;
+                default:
+                    alert("Selecione um banco!");
             }
-
-            const telegramLink = `https://t.me/Baizunyy?text=Depósito%20de%20AKZ${valor}%20solicitado.`;
-            window.location.href = telegramLink;
         }
     </script>
+
 </body>
 </html>

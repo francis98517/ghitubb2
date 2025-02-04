@@ -19,6 +19,7 @@
             align-items: center;
             height: 100vh;
             color: #333;
+            overflow: hidden; /* Impede a rolagem da página */
         }
 
         .container {
@@ -33,6 +34,10 @@
             flex-direction: column;
             justify-content: space-between;
             height: 100%;
+            position: fixed; /* Tornar o contêiner fixo */
+            top: 50%; /* Centraliza o contêiner verticalmente */
+            left: 50%; /* Centraliza o contêiner horizontalmente */
+            transform: translate(-50%, -50%); /* Ajusta para centralizar perfeitamente */
         }
 
         h2 {
@@ -219,10 +224,9 @@
                         convidados.forEach(convidado => {
                             const convidadoDiv = document.createElement('div');
                             convidadoDiv.classList.add('convidado');
-                            convidadoDiv.innerHTML = `
-                                <p><strong>ID:</strong> ${convidado.id} - <strong>Nome:</strong> ${convidado.nome}</p>
-                                <p class="ativo">${convidado.ativo ? 'Ativo' : 'Inativo'}</p>
-                            `;
+                            convidadoDiv.innerHTML = 
+                                `<p><strong>ID:</strong> ${convidado.id} - <strong>Nome:</strong> ${convidado.nome}</p>
+                                <p class="${convidado.ativo ? 'ativo' : 'inativo'}">${convidado.ativo ? 'Ativo' : 'Inativo'}</p>`;
                             listaConvidados.appendChild(convidadoDiv);
 
                             // Verifica se o convidado tem uma compra

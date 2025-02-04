@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Usuário - Resgatar Voucher</title>
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f7f7f7, #d3d3d3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-10px);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 28px;
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            margin: 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #e74c3c;
+            outline: none;
+            background-color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #c0392b;
+        }
+
+        .feedback {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feedback.error {
+            color: #e74c3c;
+        }
+
+        .feedback.success {
+            color: #2ecc71;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #e74c3c;
+        }
+
+        .status-message.success {
+            color: #2ecc71;
+        }
+
+        .balance-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .balance-container p {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Resgatar Voucher</h2>
+
+        <!-- Container do Voucher -->
+        <div class="voucher-container">
+            <h3>Digite o código do voucher</h3>
+            <input type="text" id="voucherCode" placeholder="Código do voucher">
+            <button id="resgatarVoucherBtn">Resgatar</button>
+            <p class="status-message" id="statusMessage"></p>
+        </div>
+
+        <!-- Exibir saldo atualizado -->
+        <div class="balance-container">
+            <h3>Seu Saldo Atual</h3>
+            <p id="saldo">AKZ 0.00</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const saldoElement = document.getElementById('saldo');
+            const voucherCodeInput = document.getElementById('voucherCode');
+            const resgatarVoucherBtn = document.getElementById('resgatarVoucherBtn');
+            const statusMessage = document.getElementById('statusMessage');
+
+            // Carregar saldo do usuário do localStorage
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+            if (usuarioLogado) {
+                saldoElement.textContent = `AKZ ${usuarioLogado.saldo.toFixed(2)}`;
+            } else {
+                window.location.href = 'index.html';
+            }
+
+            // Resgatar Voucher
+            resgatarVoucherBtn.addEventListener('click', function () {
+                const voucherCode = voucherCodeInput.value.trim();
+
+                if (voucherCode) {
+                    // Enviar solicitação ao backend para validar o voucher
+                    fetch('https://meuappi.onrender.com/voucher?codigo=' + voucherCode)
+                    .then(response => response.json())
+                    .then(voucherData => {
+                        if (voucherData.length > 0) {
+                            const voucher = voucherData[0]; // Considerando que a resposta é um array de vouchers
+
+                            if (voucher.usado) {
+                                statusMessage.textContent = 'Voucher já foi usado!';
+                            } else {
+                                // Atualizar saldo do usuário
+                                usuarioLogado.saldo += parseFloat(voucher.valor);
+                                localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+
+                                // Atualizar saldo na página
+                                saldoElement.textContent = `AKZ ${usuarioLogado.saldo.toFixed(2)}`;
+
+                                // Marcar voucher como usado no backend
+                                fetch(`https://meuappi.onrender.com/voucher/${voucher.id}`, {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ usado: true })
+                                })
+                                .then(response => response.json())
+                                .then(updatedVoucher => {
+                                    statusMessage.textContent = 'Voucher resgatado com sucesso!';
+                                    statusMessage.classList.add('success');
+                                    
+                                    // Atualizar saldo no backend do usuário
+                                    fetch(`https://meuappi.onrender.com/usuarios/${usuarioLogado.id}`, {
+                                        method: 'PATCH',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                            saldo: usuarioLogado.saldo
+                                        })
+                                    })
+                                    .then(response => response.json())
+                                    .then(updatedUser => {
+                                        console.log('Saldo do usuário atualizado no backend:', updatedUser);
+                                    })
+                                    .catch(error => {
+                                        console.error('Erro ao atualizar saldo no backend:', error);
+                                    });
+                                })
+                                .catch(error => {
+                                    statusMessage.textContent = 'Erro ao atualizar o voucher, tente novamente.';
+                                });
+                            }
+                        } else {
+                            statusMessage.textContent = 'Voucher inválido!';
+                        }
+                    })
+                    .catch(error => {
+                        statusMessage.textContent = 'Erro ao validar voucher, tente novamente!';
+                    });
+                } else {
+                    statusMessage.textContent = 'Por favor, insira o código do voucher.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             background-color: #f1f1f1;
+            overflow: hidden; /* Impede o scroll da página */
         }
 
         .container {
@@ -22,6 +23,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
+            overflow-y: auto; /* Adiciona rolagem no conteúdo, se necessário */
         }
 
         h2 {
@@ -32,39 +35,51 @@
             padding-top: 20px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            height: 100%; /* Ocupa toda a altura disponível */
-            overflow-y: auto;
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding-bottom: 20px; /* Garante que a rolagem apareça se houver mais cards */
+            overflow: auto;
         }
 
-        th, td {
-            padding: 12px 8px; /* Maior espaçamento nas células */
-            text-align: left;
-            border: 1px solid #ccc;
-            font-size: 16px;
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default; /* Evita interações como 'click' acidental */
         }
 
-        th {
-            background-color: #0056b3;
-            color: white;
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
-        td {
-            background-color: #f9f9f9;
+        .card-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #0056b3;
+        }
+
+        .card-body {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #555;
         }
 
         .status-pendente {
             color: green;
+            font-weight: bold;
         }
 
         .status-expirado {
             color: red;
-        }
-
-        .status {
             font-weight: bold;
         }
 
@@ -81,14 +96,17 @@
                 font-size: 20px;
             }
 
-            table, th, td {
-                font-size: 14px;
-                padding: 10px;
+            .card {
+                width: 260px;
+                padding: 15px;
             }
 
-            th, td {
-                word-wrap: break-word;
-                white-space: normal;
+            .card-header {
+                font-size: 16px;
+            }
+
+            .card-body {
+                font-size: 12px;
             }
         }
 
@@ -97,17 +115,17 @@
                 font-size: 18px;
             }
 
-            th, td {
-                font-size: 12px;
-                padding: 8px;
+            .card {
+                width: 100%;
+                padding: 10px;
             }
 
-            table {
-                font-size: 12px;
+            .card-header {
+                font-size: 14px;
             }
 
-            td {
-                padding: 6px;
+            .card-body {
+                font-size: 10px;
             }
         }
     </style>
@@ -116,20 +134,10 @@
     <div class="container">
         <h2>Histórico de Investimentos</h2>
 
-        <!-- Tabela de Produtos Comprados -->
-        <table id="tabela-produtos">
-            <thead>
-                <tr>
-                    <th>Produto</th>
-                    <th>Data de Compra</th>
-                    <th>Data de Expiração</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Produtos serão listados aqui -->
-            </tbody>
-        </table>
+        <!-- Container para os cartões -->
+        <div class="cards-container" id="cards-container">
+            <!-- Cartões de histórico de investimentos serão listados aqui -->
+        </div>
 
         <!-- Feedback -->
         <div id="feedback-produtos" class="feedback"></div>
@@ -137,7 +145,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const tabelaProdutos = document.getElementById('tabela-produtos').getElementsByTagName('tbody')[0];
+            const cardsContainer = document.getElementById('cards-container');
             const feedbackProdutos = document.getElementById('feedback-produtos');
 
             // Recuperar usuário logado do localStorage
@@ -156,7 +164,7 @@
                         feedbackProdutos.textContent = 'Você não tem nenhum produto comprado no momento.';
                         feedbackProdutos.className = 'error';
                     } else {
-                        // Exibir as compras na tabela
+                        // Exibir as compras em cartões
                         compras.forEach(compra => {
                             // Calcular a data de expiração (25 dias após a data de compra)
                             const dataCompra = new Date(compra.dataCompra);
@@ -173,17 +181,20 @@
                                 statusClass = 'status-expirado';
                             }
 
-                            // Buscar o nome do produto a partir do ID (ou de qualquer outra informação que seja necessária)
-                            const nomeProduto = compra.nomeProduto; // Certifique-se de que o nomeProduto esteja correto na resposta da API.
+                            // Criar o cartão
+                            const card = document.createElement('div');
+                            card.classList.add('card');
 
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                <td>${nomeProduto}</td>
-                                <td>${dataCompra.toLocaleDateString()}</td>
-                                <td>${dataExpiracao.toLocaleDateString()}</td>
-                                <td class="${statusClass}">${status}</td>
+                            card.innerHTML = `
+                                <div class="card-header">${compra.nomeProduto}</div>
+                                <div class="card-body">
+                                    <p><strong>Data de Compra:</strong> ${dataCompra.toLocaleDateString()}</p>
+                                    <p><strong>Data de Expiração:</strong> ${dataExpiracao.toLocaleDateString()}</p>
+                                    <p class="${statusClass}"><strong>Status:</strong> ${status}</p>
+                                </div>
                             `;
-                            tabelaProdutos.appendChild(tr);
+
+                            cardsContainer.appendChild(card);
                         });
                     }
                 })

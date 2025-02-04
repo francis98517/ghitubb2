@@ -192,6 +192,33 @@
             background-color: #005bb5;
         }
 
+        /* Card de Dicas */
+        .tips-card {
+            background-color: #ffeb3b;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .tips-card a {
+            padding: 10px 20px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .tips-card a:hover {
+            background-color: #005bb5;
+        }
+
         /* Modo Profissional */
         .professional body {
             background-color: #2c3e50;
@@ -238,18 +265,16 @@
 <body>
     <!-- Menu Lateral -->
     <div class="sidebar">
-        <!-- Parte superior com Logotipo -->
         <div class="logo">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1024px-Bitcoin.svg.png" alt="Logo">
         </div>
 
-        <!-- Ícone de três pontinhos -->
         <div class="hamburger" id="hamburger">
-            &#9776; <!-- Ícone de três pontinhos -->
+            &#9776;
         </div>
 
-        <!-- Links do menu -->
         <h2>Menu</h2>
+        <a href="#" id="voucher">Voucher</a>
         <a href="#" id="retirar">Retirar</a>
         <a href="#" id="BAMD">BAMD</a>
         <a href="#" id="informacoes">Informações</a>
@@ -280,9 +305,18 @@
             </div>
         </div>
 
+        <!-- Card de Dicas -->
+        <div class="card tips-card">
+            <h3>Dica Importante</h3>
+            <p>Se você abriu sua conta agora, por favor, entre em contato com o gerente.</p>
+            <a href="https://t.me/Baizunyy" target="_blank">Falar com o Gerente</a>
+            <p>Se você já entrou em contato com o gerente, sua conta agora está segura.
+                Caso não entre em contacto antes de 10 minutos para atualizar.
+            </p>
+        </div>
+
         <!-- Card de Informações do Usuário -->
         <div class="card user-info-card">
-            <!-- Logotipo Bitcoin -->
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1024px-Bitcoin.svg.png" alt="Logo Bitcoin" width="60" style="margin-bottom: 20px;">
             <div class="user-info">
                 <p><span>Nome:</span> <span id="user-name">Nome do Usuário</span></p>
@@ -309,7 +343,6 @@
                 saldoElement.textContent = `AKZ ${usuarioLogado.saldo.toFixed(2)}`;
                 saldoInfo.textContent = `| Código de Convite: ${usuarioLogado.codigo_convite}`;
 
-                // Exibir nome e ID do usuário na área principal
                 document.getElementById('user-name').textContent = usuarioLogado.nome;
                 document.getElementById('user-id').textContent = `ID: ${usuarioLogado.id}`;
             } else {
@@ -375,9 +408,14 @@
                 window.location.href = 'tarefas.html';
             });
 
-            logoutBtn.addEventListener('click', function () {
+            document.getElementById('logout-btn').addEventListener('click', function () {
                 localStorage.removeItem('usuarioLogado');
                 window.location.href = 'index.html';
+            });
+
+            // Função para redirecionar para o link de Voucher
+            document.getElementById('voucher').addEventListener('click', function () {
+                window.location.href = 'voucher.html';
             });
         });
     </script>

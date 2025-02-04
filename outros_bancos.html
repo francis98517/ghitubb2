@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página BFA - Depósito</title>
+    <style>
+        /* Reset básico de margens e preenchimentos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Corpo da página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        /* Título */
+        h1 {
+            color: #B30000;  /* Vermelho descarregado */
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        /* Container central do formulário */
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centraliza o formulário na tela */
+            z-index: 1000;
+            overflow-y: auto; /* Permite rolagem caso o conteúdo seja maior que a tela */
+            max-height: 90vh; /* Limita a altura máxima da tela */
+        }
+
+        /* Estilo dos campos de input */
+        .field {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        input[type="text"], input[type="number"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Botões */
+        .copy-button, .recarregar-button, .concluido-button {
+            background-color: #ff0000;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+            display: inline-block;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .copy-button:hover, .recarregar-button:hover, .concluido-button:hover {
+            background-color: #cc0000;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+
+        .dicas {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .dicas h3 {
+            margin-top: 0;
+        }
+
+        .image-container {
+            margin-top: 20px;
+        }
+
+        img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .container {
+                width: 90%;
+                padding: 15px;
+            }
+
+            .copy-button, .recarregar-button, .concluido-button {
+                width: 100%;
+            }
+
+            img {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 18px;
+            }
+
+            .container {
+                width: 90%;
+                padding: 10px;
+            }
+
+            .field input {
+                font-size: 14px;
+            }
+
+            .copy-button, .recarregar-button, .concluido-button {
+                font-size: 14px;
+            }
+
+            .dicas ul {
+                font-size: 14px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Página de Depósito BFA</h1>
+
+    <div class="container">
+        <div class="dicas">
+            <h3>Dicas importantes:</h3>
+            <ul>
+                <li>Para outros bancos faça deposito nesta conta.</li>
+                <li>Realize depósitos de segunda a domingo das 9h às 22h.</li>
+                <li>O valor mínimo para depósito é 6000.</li>
+                <li>Clique em "Recarregar" para atualizar a imagem ou outros detalhes do seu depósito.</li>
+                <li>Após concluir, clique em "Concluído" para ser redirecionado ao Telegram.</li>
+            </ul>
+        </div>
+
+        <!-- IBAN -->
+        <div class="field">
+            <label for="iban">IBAN:</label>
+            <input type="text" id="iban" value="000600002035568230109" readonly>
+            <button class="copy-button" onclick="copyToClipboard('iban')">Copiar IBAN</button>
+        </div>
+
+        <!-- Nome -->
+        <div class="field">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" value="Jacob Tomas" readonly>
+            <button class="copy-button" onclick="copyToClipboard('nome')">Copiar Nome</button>
+        </div>
+
+        <!-- Valor -->
+        <div class="field">
+            <label for="valor">Valor (mínimo: 6000):</label>
+            <input type="number" id="valor" placeholder="Digite o valor" min="6000">
+            <div id="valorError" class="error-message"></div>
+        </div>
+
+        <!-- Carregar Imagem -->
+        <div class="field">
+            <label for="image">Carregar Imagem do Depósito:</label>
+            <input type="file" id="image" accept="image/*">
+            <div id="imagePreview"></div>
+        </div>
+
+        <!-- Botão Concluído -->
+        <button class="concluido-button" onclick="sendToTelegram()">Concluído</button>
+    </div>
+
+    <script>
+        // Função para copiar texto para a área de transferência
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            element.setSelectionRange(0, 99999); // Para dispositivos móveis
+            document.execCommand("copy");
+            alert(elementId.charAt(0).toUpperCase() + elementId.slice(1) + ' copiado para a área de transferência!');
+        }
+
+        // Função para pré-visualizar a imagem carregada
+        document.getElementById('image').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').innerHTML = `<img src="${e.target.result}" alt="Imagem do Depósito">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Função de redirecionamento para o Telegram
+        function sendToTelegram() {
+            const valor = document.getElementById('valor').value;
+            const image = document.getElementById('image').files[0];
+
+            // Validação do valor mínimo
+            if (parseFloat(valor) < 6000) {
+                document.getElementById('valorError').textContent = "O valor mínimo para depósito é 6000.";
+                return;
+            }
+
+            // Caso o valor esteja correto, cria a URL de redirecionamento com a mensagem para o Telegram
+            const message = `Depósito de: ${valor}€\nImagem do Depósito: [Link da Imagem]`;
+
+            // Construa o link de redirecionamento para sua conta no Telegram
+            const telegramUrl = `https://t.me/Baizunyy?text=${encodeURIComponent(message)}`;
+
+            // Redireciona o usuário para sua conta no Telegram com a mensagem
+            window.location.href = telegramUrl;
+        }
+    </script>
+
+</body>
+</html>
